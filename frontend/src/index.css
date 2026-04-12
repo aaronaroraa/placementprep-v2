@@ -1,0 +1,261 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --void: #06060d;
+  --base: #0b0b14;
+  --surface: #10101c;
+  --raised: #161624;
+  --border: rgba(255,255,255,0.07);
+  --border-bright: rgba(255,255,255,0.14);
+  --indigo: #6366f1;
+  --indigo-dim: rgba(99,102,241,0.15);
+  --indigo-glow: rgba(99,102,241,0.25);
+  --green: #22d3a5;
+  --green-dim: rgba(34,211,165,0.12);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.12);
+  --red: #f43f5e;
+  --red-dim: rgba(244,63,94,0.12);
+  --text-1: rgba(255,255,255,0.95);
+  --text-2: rgba(255,255,255,0.6);
+  --text-3: rgba(255,255,255,0.35);
+  --font-display: 'Clash Display', sans-serif;
+  --font-body: 'Satoshi', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 2px; }
+
+/* ── Typography ───────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+/* ── Cards ────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+/* Bordered left accent card */
+.card-accent {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--indigo);
+  border-radius: 12px;
+}
+
+.card-accent-green { border-left-color: var(--green); }
+.card-accent-amber { border-left-color: var(--amber); }
+.card-accent-red { border-left-color: var(--red); }
+
+/* ── Inputs ───────────────────────────────────────── */
+.input {
+  width: 100%;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input:focus {
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 3px var(--indigo-dim);
+}
+.input::placeholder { color: var(--text-3); }
+.input option { background: var(--raised); }
+
+/* ── Buttons ──────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  font-family: var(--font-body); font-weight: 600; font-size: 13px;
+  border: none; border-radius: 9px; cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--indigo);
+  color: white;
+  padding: 10px 22px;
+  box-shadow: 0 0 20px var(--indigo-glow);
+}
+.btn-primary:hover:not(:disabled) { opacity: 0.88; box-shadow: 0 0 30px var(--indigo-glow); }
+
+.btn-ghost {
+  background: var(--raised);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  padding: 10px 22px;
+}
+.btn-ghost:hover:not(:disabled) { border-color: var(--border-bright); color: var(--text-1); }
+
+.btn-green {
+  background: var(--green);
+  color: #06060d;
+  padding: 10px 22px;
+  font-weight: 700;
+}
+.btn-green:hover:not(:disabled) { opacity: 0.88; }
+
+.btn-sm { padding: 6px 14px; font-size: 12px; border-radius: 7px; }
+.btn-icon { width: 36px; height: 36px; border-radius: 9px; padding: 0; }
+
+/* ── Badges ───────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; letter-spacing: 0.4px; text-transform: uppercase; }
+.badge-easy { background: var(--green-dim); color: var(--green); }
+.badge-medium { background: var(--amber-dim); color: var(--amber); }
+.badge-hard { background: var(--red-dim); color: var(--red); }
+.badge-indigo { background: var(--indigo-dim); color: var(--indigo); }
+.badge-subtle { background: rgba(255,255,255,0.06); color: var(--text-3); }
+
+/* ── Progress ─────────────────────────────────────── */
+.progress-track {
+  width: 100%; height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; border-radius: 2px;
+  background: var(--indigo);
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+}
+.progress-fill-green { background: var(--green); }
+
+/* ── Chat bubbles ─────────────────────────────────── */
+.bubble-user {
+  background: var(--indigo);
+  color: white;
+  border-radius: 16px 16px 4px 16px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 85%;
+  align-self: flex-end;
+}
+.bubble-ai {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 16px 4px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.65;
+  max-width: 90%;
+  align-self: flex-start;
+  color: var(--text-1);
+}
+
+/* ── Typing dots ──────────────────────────────────── */
+.typing-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  animation: tdot 1.1s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: .18s; }
+.typing-dot:nth-child(3) { animation-delay: .36s; }
+@keyframes tdot { 0%,60%,100% { transform:translateY(0); opacity:.4; } 30% { transform:translateY(-5px); opacity:1; } }
+
+/* ── Noise texture overlay ────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+/* ── Glow orbs ────────────────────────────────────── */
+.orb {
+  position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+  filter: blur(80px);
+}
+
+/* ── Number counter ───────────────────────────────── */
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+/* ── Markdown in chat ─────────────────────────────── */
+.md pre { background: var(--void); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; font-family: var(--font-mono); font-size: 12px; margin: 8px 0; }
+.md code { font-family: var(--font-mono); font-size: 12px; background: rgba(0,0,0,0.3); padding: 2px 5px; border-radius: 4px; }
+.md p { margin-bottom: 7px; }
+.md ul { padding-left: 16px; margin-bottom: 7px; }
+.md strong { color: var(--green); font-weight: 600; }
+
+/* ── Task row ─────────────────────────────────────── */
+.task-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 13px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.task-row:hover { border-color: var(--border-bright); transform: translateX(2px); }
+.task-row.done { opacity: 0.45; }
+.task-row.done:hover { transform: none; cursor: default; }
+
+/* ── Flashcard ────────────────────────────────────── */
+.flashcard {
+  perspective: 1000px;
+  width: 100%; min-height: 200px;
+}
+.flashcard-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+}
+.flashcard-inner.flipped { transform: rotateY(180deg); }
+.flashcard-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px;
+}
+.flashcard-back { transform: rotateY(180deg); }
+
+/* ── Spin ─────────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.7s linear infinite; }
+
+/* ── Countdown pulse ──────────────────────────────── */
+@keyframes cPulse { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
+.countdown-urgent { animation: cPulse 1.5s ease-in-out infinite; }
+
+/* ── Page fade ────────────────────────────────────── */
+.page-enter { animation: pageFade 0.25s ease-out; }
+@keyframes pageFade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }

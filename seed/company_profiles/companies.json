@@ -1,0 +1,167 @@
+{
+  "companies": {
+    "google": {
+      "company": "Google",
+      "slug": "google",
+      "common_topics": ["algorithms", "data-structures", "system-design", "graphs", "dynamic-programming"],
+      "interview_rounds": [
+        "Phone Screen (1-2 coding problems)",
+        "Onsite x5: 2 coding + 1 system design + 1 behavioral + 1 Googleyness"
+      ],
+      "typical_difficulty": "hard",
+      "focus_areas": [
+        "Hard algorithmic problems — optimal solutions expected",
+        "Code quality and readability matter",
+        "System Design: scale to millions of users",
+        "Graphs and DP are heavily tested",
+        "Communicating your thought process clearly"
+      ],
+      "top_problems": [
+        "Word Ladder", "Course Schedule", "LRU Cache", "Trapping Rain Water",
+        "Find Median from Data Stream", "Longest Increasing Subsequence"
+      ],
+      "tips": [
+        "Think out loud — interviewers evaluate process, not just answers.",
+        "Always discuss time and space complexity proactively.",
+        "Aim for optimal solution — O(n²) often won't pass.",
+        "Practice writing clean, readable code under pressure."
+      ]
+    },
+    "microsoft": {
+      "company": "Microsoft",
+      "slug": "microsoft",
+      "common_topics": ["trees", "dynamic-programming", "system-design", "oop", "arrays"],
+      "interview_rounds": [
+        "Online Assessment (coding + reasoning, 75 min)",
+        "Phone Screen (30 min, 1-2 problems)",
+        "Onsite x4-5: coding + behavioral + system design"
+      ],
+      "typical_difficulty": "medium",
+      "focus_areas": [
+        "OOP design principles",
+        "Trees (BST, binary trees) — very common",
+        "System Design for Azure-scale problems",
+        "Growth mindset and collaboration stories",
+        "Clean, well-structured code"
+      ],
+      "top_problems": [
+        "Validate BST", "Lowest Common Ancestor", "Reverse Linked List",
+        "Merge Two Sorted Lists", "Maximum Depth of Binary Tree"
+      ],
+      "tips": [
+        "Microsoft values 'growth mindset' — show you learn from mistakes.",
+        "Ask clarifying questions before coding.",
+        "OOP: be ready to design classes and discuss SOLID principles.",
+        "Behavioral: focus on teamwork and collaboration."
+      ]
+    },
+    "flipkart": {
+      "company": "Flipkart",
+      "slug": "flipkart",
+      "common_topics": ["backend", "system-design", "databases", "java", "algorithms"],
+      "interview_rounds": [
+        "Online Test (3 coding problems, 150 min)",
+        "Technical Round 1 (DSA)",
+        "Technical Round 2 (System Design)",
+        "Hiring Manager Round (behavioral)"
+      ],
+      "typical_difficulty": "medium",
+      "focus_areas": [
+        "Java / Python backend development",
+        "High-scale system design (e-commerce)",
+        "Database design and optimization",
+        "API design and microservices",
+        "Practical problem solving"
+      ],
+      "top_problems": [
+        "LRU Cache", "Merge Intervals", "Number of Islands",
+        "Top K Frequent Elements", "Course Schedule"
+      ],
+      "tips": [
+        "Think e-commerce: inventory, orders, recommendations.",
+        "Know Java internals: collections, concurrency.",
+        "System design: focus on availability and consistency tradeoffs.",
+        "SQL: joins, indexing, query optimization."
+      ]
+    },
+    "razorpay": {
+      "company": "Razorpay",
+      "slug": "razorpay",
+      "common_topics": ["backend", "databases", "api-design", "system-design", "javascript"],
+      "interview_rounds": [
+        "Online Coding Test (2-3 problems)",
+        "Technical Interview 1 (Backend + DSA)",
+        "Technical Interview 2 (System Design + APIs)",
+        "Culture Fit + Hiring Manager"
+      ],
+      "typical_difficulty": "medium",
+      "focus_areas": [
+        "Payment systems and financial workflows",
+        "Node.js / Python backend",
+        "Database design: transactions, ACID",
+        "REST API and microservices design",
+        "Security: OAuth, encryption basics"
+      ],
+      "top_problems": [
+        "Design Payment Gateway", "LRU Cache", "Rate Limiter Design",
+        "Two Sum", "Valid Parentheses"
+      ],
+      "tips": [
+        "Understand payment flows: idempotency, retries, webhooks.",
+        "Know database transactions and isolation levels.",
+        "API design: versioning, error codes, rate limiting.",
+        "Startup culture: show ownership and impact mindset."
+      ]
+    },
+    "zepto": {
+      "company": "Zepto",
+      "slug": "zepto",
+      "common_topics": ["backend", "system-design", "databases", "algorithms"],
+      "interview_rounds": [
+        "Online Coding Test",
+        "Technical Interview (DSA + Backend)",
+        "System Design",
+        "Founder Round"
+      ],
+      "typical_difficulty": "medium",
+      "focus_areas": [
+        "Fast execution and ownership mentality",
+        "Backend systems at scale",
+        "Database and caching (Redis heavy)",
+        "Real-time systems: inventory, delivery tracking"
+      ],
+      "top_problems": ["LRU Cache", "Design Rate Limiter", "Number of Islands", "Two Sum"],
+      "tips": [
+        "Zepto is a startup — show hustle and ownership.",
+        "Quick commerce: low latency, high availability.",
+        "Redis and caching patterns are important.",
+        "Be ready to discuss real-world tradeoffs."
+      ]
+    },
+    "paytm": {
+      "company": "Paytm",
+      "slug": "paytm",
+      "common_topics": ["backend", "java", "databases", "system-design"],
+      "interview_rounds": [
+        "Online Test (coding + MCQs)",
+        "Technical Round 1 (DSA + Java)",
+        "Technical Round 2 (System Design)",
+        "HR Round"
+      ],
+      "typical_difficulty": "medium",
+      "focus_areas": [
+        "Java: Spring Boot, multithreading",
+        "Payment systems and wallet design",
+        "Database: MySQL, Redis, Kafka",
+        "High-volume transaction processing"
+      ],
+      "top_problems": ["LRU Cache", "Merge Intervals", "Design Wallet System"],
+      "tips": [
+        "Know Java Spring Boot well.",
+        "Understand distributed transactions.",
+        "Kafka and event-driven architecture are frequently discussed.",
+        "Paytm processes millions of transactions — think scale."
+      ]
+    }
+  }
+}

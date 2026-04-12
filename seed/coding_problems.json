@@ -1,0 +1,1291 @@
+[
+  {
+    "title": "Two Sum",
+    "description": "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. You may assume that each input would have exactly one solution, and you may not use the same element twice.\n\n**Example:**\n```\nInput: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: nums[0] + nums[1] == 9\n```",
+    "difficulty": "easy",
+    "category": "arrays",
+    "tags": ["array", "hash-map"],
+    "test_cases": [
+      {"input": "[2,7,11,15]\n9", "expected_output": "[0, 1]"},
+      {"input": "[3,2,4]\n6", "expected_output": "[1, 2]"},
+      {"input": "[3,3]\n6", "expected_output": "[0, 1]"}
+    ],
+    "constraints": "2 <= nums.length <= 10^4\n-10^9 <= nums[i] <= 10^9\nExactly one valid answer exists.",
+    "hints": [
+      "A brute force approach is O(n²). Can you do better?",
+      "Think about what you need to find for each element: target - nums[i].",
+      "Use a hash map to store each number's index as you iterate."
+    ],
+    "solution_approach": "Use a hash map. For each element, check if (target - element) exists in the map. If yes, return indices. Otherwise, add element to map.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook", "adobe"],
+    "role_tags": ["sde-1", "sde-2", "frontend", "backend"],
+    "times_asked": 95,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/two-sum/"
+  },
+  {
+    "title": "Valid Parentheses",
+    "description": "Given a string `s` containing just the characters `(`, `)`, `{`, `}`, `[` and `]`, determine if the input string is valid.\n\nA string is valid if:\n1. Open brackets must be closed by the same type of brackets.\n2. Open brackets must be closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.\n\n**Example:**\n```\nInput: s = \"()[]{}\"\nOutput: true\n\nInput: s = \"(]\"\nOutput: false\n```",
+    "difficulty": "easy",
+    "category": "stacks",
+    "tags": ["stack", "string"],
+    "test_cases": [
+      {"input": "()[]{}", "expected_output": "true"},
+      {"input": "(]", "expected_output": "false"},
+      {"input": "([)]", "expected_output": "false"},
+      {"input": "{[]}", "expected_output": "true"}
+    ],
+    "constraints": "1 <= s.length <= 10^4\ns consists of parentheses only '()[]{}'",
+    "hints": [
+      "Use a stack data structure.",
+      "Push opening brackets onto the stack. When you see a closing bracket, check if it matches the top of the stack.",
+      "At the end, the stack should be empty for a valid string."
+    ],
+    "solution_approach": "Use a stack. Push opening brackets. For closing brackets, pop from stack and verify match. Return stack.empty() at end.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook", "goldman sachs"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 88,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/valid-parentheses/"
+  },
+  {
+    "title": "Reverse Linked List",
+    "description": "Given the head of a singly linked list, reverse the list, and return the reversed list.\n\n**Example:**\n```\nInput: head = [1,2,3,4,5]\nOutput: [5,4,3,2,1]\n```",
+    "difficulty": "easy",
+    "category": "linked_lists",
+    "tags": ["linked-list", "recursion"],
+    "test_cases": [
+      {"input": "[1,2,3,4,5]", "expected_output": "[5,4,3,2,1]"},
+      {"input": "[1,2]", "expected_output": "[2,1]"},
+      {"input": "[]", "expected_output": "[]"}
+    ],
+    "constraints": "The number of nodes in the list is in the range [0, 5000].\n-5000 <= Node.val <= 5000",
+    "hints": [
+      "Can you solve it iteratively with O(1) extra space?",
+      "Keep track of the previous, current, and next nodes as you traverse.",
+      "At each step: save next, point current to prev, advance prev and curr."
+    ],
+    "solution_approach": "Iterative: Use three pointers (prev=None, curr=head, next). At each step: next=curr.next, curr.next=prev, prev=curr, curr=next. Return prev.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "microsoft", "facebook", "adobe", "flipkart"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 82,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/reverse-linked-list/"
+  },
+  {
+    "title": "Maximum Subarray (Kadane's Algorithm)",
+    "description": "Given an integer array `nums`, find the subarray with the largest sum, and return its sum.\n\n**Example:**\n```\nInput: nums = [-2,1,-3,4,-1,2,1,-5,4]\nOutput: 6\nExplanation: [4,-1,2,1] has the largest sum = 6.\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["array", "dynamic-programming", "greedy"],
+    "test_cases": [
+      {"input": "[-2,1,-3,4,-1,2,1,-5,4]", "expected_output": "6"},
+      {"input": "[1]", "expected_output": "1"},
+      {"input": "[5,4,-1,7,8]", "expected_output": "23"}
+    ],
+    "constraints": "1 <= nums.length <= 10^5\n-10^4 <= nums[i] <= 10^4",
+    "hints": [
+      "Think about what the maximum subarray ending at each position would be.",
+      "At each position, you either extend the previous subarray or start fresh.",
+      "current_max = max(nums[i], current_max + nums[i])"
+    ],
+    "solution_approach": "Kadane's: Track current_sum and max_sum. At each element: current_sum = max(num, current_sum + num). Update max_sum. O(n) time, O(1) space.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "microsoft", "linkedin", "apple"],
+    "role_tags": ["sde-1", "sde-2", "ml-engineer"],
+    "times_asked": 78,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/maximum-subarray/"
+  },
+  {
+    "title": "Binary Search",
+    "description": "Given an array of integers `nums` which is sorted in ascending order, and an integer `target`, write a function to search `target` in `nums`. If `target` exists, return its index. Otherwise, return `-1`.\n\n**Example:**\n```\nInput: nums = [-1,0,3,5,9,12], target = 9\nOutput: 4\n```",
+    "difficulty": "easy",
+    "category": "binary_search",
+    "tags": ["array", "binary-search"],
+    "test_cases": [
+      {"input": "[-1,0,3,5,9,12]\n9", "expected_output": "4"},
+      {"input": "[-1,0,3,5,9,12]\n2", "expected_output": "-1"},
+      {"input": "[5]\n5", "expected_output": "0"}
+    ],
+    "constraints": "1 <= nums.length <= 10^4\nnums is sorted in ascending order\nAll integers are unique.",
+    "hints": [
+      "Think about the invariant: what does it mean for lo and hi to be valid?",
+      "The midpoint is lo + (hi - lo) // 2 to avoid integer overflow.",
+      "If mid < target, search right half. If mid > target, search left half."
+    ],
+    "solution_approach": "Classic binary search: lo=0, hi=len-1. While lo<=hi: mid=(lo+hi)//2. Compare nums[mid] with target and adjust bounds.",
+    "optimal_complexity": "O(log n)",
+    "company_tags": ["google", "amazon", "microsoft", "facebook", "uber"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 85,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/binary-search/"
+  },
+  {
+    "title": "Climbing Stairs",
+    "description": "You are climbing a staircase. It takes `n` steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?\n\n**Example:**\n```\nInput: n = 3\nOutput: 3\nExplanation: 1+1+1, 1+2, 2+1\n```",
+    "difficulty": "easy",
+    "category": "dp",
+    "tags": ["dynamic-programming", "memoization", "fibonacci"],
+    "test_cases": [
+      {"input": "2", "expected_output": "2"},
+      {"input": "3", "expected_output": "3"},
+      {"input": "5", "expected_output": "8"}
+    ],
+    "constraints": "1 <= n <= 45",
+    "hints": [
+      "Think about the last step: you either came from step n-1 or step n-2.",
+      "This is essentially Fibonacci numbers.",
+      "You only need the previous two values — no array needed."
+    ],
+    "solution_approach": "dp[i] = dp[i-1] + dp[i-2]. Base cases: dp[1]=1, dp[2]=2. Optimize to O(1) space using two variables.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "microsoft", "apple", "adobe"],
+    "role_tags": ["sde-1"],
+    "times_asked": 75,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/climbing-stairs/"
+  },
+  {
+    "title": "Number of Islands",
+    "description": "Given an m×n 2D binary grid `grid` which represents a map of '1's (land) and '0's (water), return the number of islands.\n\nAn island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.\n\n**Example:**\n```\nInput: grid = [\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"1\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"1\",\"1\"]\n]\nOutput: 3\n```",
+    "difficulty": "medium",
+    "category": "graphs",
+    "tags": ["graph", "bfs", "dfs", "union-find"],
+    "test_cases": [
+      {"input": "[[\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\"],[\"0\",\"0\",\"1\"]]", "expected_output": "2"},
+      {"input": "[[\"1\",\"1\",\"1\"],[\"0\",\"1\",\"0\"],[\"1\",\"1\",\"1\"]]", "expected_output": "1"}
+    ],
+    "constraints": "m == grid.length, n == grid[i].length\n1 <= m, n <= 300\ngrid[i][j] is '0' or '1'",
+    "hints": [
+      "Use DFS or BFS starting from each unvisited land cell.",
+      "Mark visited cells to avoid counting them again (modify in-place or use a visited set).",
+      "Each time you start a new DFS/BFS, increment the island count."
+    ],
+    "solution_approach": "Iterate grid. On '1', increment count, run DFS to mark all connected '1's as '0' (visited). Return count.",
+    "optimal_complexity": "O(m*n)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook", "uber", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 90,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/number-of-islands/"
+  },
+  {
+    "title": "LRU Cache",
+    "description": "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.\n\nImplement the `LRUCache` class:\n- `LRUCache(int capacity)` — Initialize with positive size capacity\n- `int get(int key)` — Return value of key if exists, otherwise -1\n- `void put(int key, int value)` — Update key's value. If key doesn't exist, insert. If capacity reached, evict LRU key.\n\nBoth `get` and `put` must run in O(1) average time complexity.",
+    "difficulty": "medium",
+    "category": "design",
+    "tags": ["hash-map", "doubly-linked-list", "design"],
+    "test_cases": [
+      {"input": "[[\"LRUCache\",\"put\",\"put\",\"get\",\"put\",\"get\",\"put\",\"get\",\"get\",\"get\"],[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]]", "expected_output": "[null,null,null,1,null,-1,null,-1,3,4]"}
+    ],
+    "constraints": "1 <= capacity <= 3000\n0 <= key <= 10^4\n0 <= value <= 10^5\nAt most 2*10^5 calls will be made to get and put.",
+    "hints": [
+      "You need O(1) access — use a hash map. You need O(1) eviction — use a doubly linked list.",
+      "The hash map maps key → node in the doubly linked list.",
+      "On access, move node to front. On eviction, remove from tail."
+    ],
+    "solution_approach": "Combine OrderedDict or HashMap + DoublyLinkedList. HashMap gives O(1) lookup. DLL gives O(1) move-to-front and evict-from-tail.",
+    "optimal_complexity": "O(1)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook", "uber", "flipkart"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 85,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/lru-cache/"
+  },
+  {
+    "title": "Merge Intervals",
+    "description": "Given an array of `intervals` where `intervals[i] = [start_i, end_i]`, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.\n\n**Example:**\n```\nInput: intervals = [[1,3],[2,6],[8,10],[15,18]]\nOutput: [[1,6],[8,10],[15,18]]\n```",
+    "difficulty": "medium",
+    "category": "arrays",
+    "tags": ["array", "sorting", "intervals"],
+    "test_cases": [
+      {"input": "[[1,3],[2,6],[8,10],[15,18]]", "expected_output": "[[1,6],[8,10],[15,18]]"},
+      {"input": "[[1,4],[4,5]]", "expected_output": "[[1,5]]"}
+    ],
+    "constraints": "1 <= intervals.length <= 10^4\nintervals[i].length == 2\n0 <= start_i <= end_i <= 10^4",
+    "hints": [
+      "Start by sorting intervals by start time.",
+      "Then iterate: if current start <= last merged end, merge (extend end). Otherwise, add new interval.",
+      "Edge case: what if intervals is empty?"
+    ],
+    "solution_approach": "Sort by start. Iterate: if result is empty or current start > result[-1].end, append. Otherwise, merge by updating result[-1].end = max(result[-1].end, current.end).",
+    "optimal_complexity": "O(n log n)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 80,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/merge-intervals/"
+  },
+  {
+    "title": "Top K Frequent Elements",
+    "description": "Given an integer array `nums` and an integer `k`, return the `k` most frequent elements.\n\n**Example:**\n```\nInput: nums = [1,1,1,2,2,3], k = 2\nOutput: [1,2]\n```",
+    "difficulty": "medium",
+    "category": "arrays",
+    "tags": ["array", "hash-map", "heap", "bucket-sort"],
+    "test_cases": [
+      {"input": "[1,1,1,2,2,3]\n2", "expected_output": "[1, 2]"},
+      {"input": "[1]\n1", "expected_output": "[1]"}
+    ],
+    "constraints": "1 <= nums.length <= 10^5\n-10^4 <= nums[i] <= 10^4\nk is in the range [1, number of unique elements]",
+    "hints": [
+      "Count frequencies with a hash map.",
+      "Use a min-heap of size k, or bucket sort for O(n).",
+      "Bucket sort: create buckets indexed by frequency, then read from highest bucket."
+    ],
+    "solution_approach": "Build frequency map. Use heap of size k (O(n log k)) or bucket sort (O(n)). Return k most frequent.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "yelp"],
+    "role_tags": ["sde-1", "sde-2", "data-engineer"],
+    "times_asked": 72,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/top-k-frequent-elements/"
+  },
+  {
+    "title": "Product of Array Except Self",
+    "description": "Given an integer array `nums`, return an array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.\n\nYou must write an algorithm that runs in O(n) time and without using the division operation.\n\n**Example:**\n```\nInput: nums = [1,2,3,4]\nOutput: [24,12,8,6]\n```",
+    "difficulty": "medium",
+    "category": "arrays",
+    "tags": ["array", "prefix-sum"],
+    "test_cases": [
+      {"input": "[1,2,3,4]", "expected_output": "[24, 12, 8, 6]"},
+      {"input": "[-1,1,0,-3,3]", "expected_output": "[0, 0, 9, 0, 0]"}
+    ],
+    "constraints": "2 <= nums.length <= 10^5\n-30 <= nums[i] <= 30\nOutput fits in a 32-bit integer.",
+    "hints": [
+      "Think about prefix and suffix products.",
+      "For each index, the answer is prefix_product[i-1] * suffix_product[i+1].",
+      "Can you compute this in O(1) extra space (excluding output array)?"
+    ],
+    "solution_approach": "Build prefix products left-to-right, then multiply by suffix products right-to-left in a second pass, all in the output array.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "facebook", "microsoft", "asana"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 70,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/product-of-array-except-self/"
+  },
+  {
+    "title": "3Sum",
+    "description": "Given an integer array `nums`, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.\n\nThe solution set must not contain duplicate triplets.\n\n**Example:**\n```\nInput: nums = [-1,0,1,2,-1,-4]\nOutput: [[-1,-1,2],[-1,0,1]]\n```",
+    "difficulty": "medium",
+    "category": "arrays",
+    "tags": ["array", "two-pointers", "sorting"],
+    "test_cases": [
+      {"input": "[-1,0,1,2,-1,-4]", "expected_output": "[[-1,-1,2],[-1,0,1]]"},
+      {"input": "[0,1,1]", "expected_output": "[]"},
+      {"input": "[0,0,0]", "expected_output": "[[0,0,0]]"}
+    ],
+    "constraints": "3 <= nums.length <= 3000\n-10^5 <= nums[i] <= 10^5",
+    "hints": [
+      "Sort the array first.",
+      "Fix one element and use two pointers for the remaining two.",
+      "Skip duplicates carefully to avoid duplicate triplets."
+    ],
+    "solution_approach": "Sort. For each i, use two pointers lo=i+1, hi=n-1. Move pointers based on sum. Skip duplicates at each level.",
+    "optimal_complexity": "O(n²)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "apple"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 75,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/3sum/"
+  },
+  {
+    "title": "Best Time to Buy and Sell Stock",
+    "description": "You are given an array `prices` where `prices[i]` is the price of a given stock on the `i`th day. You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.\n\n**Example:**\n```\nInput: prices = [7,1,5,3,6,4]\nOutput: 5\nExplanation: Buy on day 2 (price=1), sell on day 5 (price=6). Profit = 5.\n```",
+    "difficulty": "easy",
+    "category": "arrays",
+    "tags": ["array", "greedy", "dynamic-programming"],
+    "test_cases": [
+      {"input": "[7,1,5,3,6,4]", "expected_output": "5"},
+      {"input": "[7,6,4,3,1]", "expected_output": "0"}
+    ],
+    "constraints": "1 <= prices.length <= 10^5\n0 <= prices[i] <= 10^4",
+    "hints": [
+      "Track the minimum price seen so far.",
+      "At each step, compute profit = current - min_so_far.",
+      "Track the maximum profit seen."
+    ],
+    "solution_approach": "Single pass: track min_price and max_profit. For each price: update min_price, update max_profit = max(max_profit, price - min_price).",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "goldman sachs", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 80,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"
+  },
+  {
+    "title": "Valid Anagram",
+    "description": "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.\n\n**Example:**\n```\nInput: s = \"anagram\", t = \"nagaram\"\nOutput: true\n\nInput: s = \"rat\", t = \"car\"\nOutput: false\n```",
+    "difficulty": "easy",
+    "category": "strings",
+    "tags": ["string", "hash-map", "sorting"],
+    "test_cases": [
+      {"input": "anagram nagaram", "expected_output": "true"},
+      {"input": "rat car", "expected_output": "false"}
+    ],
+    "constraints": "1 <= s.length, t.length <= 5*10^4\ns and t consist of lowercase English letters.",
+    "hints": [
+      "If lengths differ, return false immediately.",
+      "Count character frequencies in both strings and compare.",
+      "Or sort both strings and compare — O(n log n)."
+    ],
+    "solution_approach": "Use Counter/frequency array. O(n) time, O(1) space (fixed 26 chars).",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "bloomberg"],
+    "role_tags": ["sde-1"],
+    "times_asked": 65,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/valid-anagram/"
+  },
+  {
+    "title": "Group Anagrams",
+    "description": "Given an array of strings `strs`, group the anagrams together. You can return the answer in any order.\n\n**Example:**\n```\nInput: strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]\nOutput: [[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]\n```",
+    "difficulty": "medium",
+    "category": "strings",
+    "tags": ["string", "hash-map", "sorting"],
+    "test_cases": [
+      {"input": "[\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]", "expected_output": "[[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]"}
+    ],
+    "constraints": "1 <= strs.length <= 10^4\n0 <= strs[i].length <= 100\nstrs[i] consists of lowercase English letters.",
+    "hints": [
+      "Two strings are anagrams if their sorted forms are equal.",
+      "Use sorted string as the hash map key.",
+      "Or use character count tuple as key for O(n*k) instead of O(n*k log k)."
+    ],
+    "solution_approach": "HashMap: key = sorted(word) or tuple(char_count), value = list of words. Return map.values().",
+    "optimal_complexity": "O(n*k*log k)",
+    "company_tags": ["amazon", "google", "facebook", "uber"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 68,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/group-anagrams/"
+  },
+  {
+    "title": "Longest Substring Without Repeating Characters",
+    "description": "Given a string `s`, find the length of the longest substring without repeating characters.\n\n**Example:**\n```\nInput: s = \"abcabcbb\"\nOutput: 3\nExplanation: \"abc\" has length 3.\n```",
+    "difficulty": "medium",
+    "category": "strings",
+    "tags": ["string", "sliding-window", "hash-map"],
+    "test_cases": [
+      {"input": "abcabcbb", "expected_output": "3"},
+      {"input": "bbbbb", "expected_output": "1"},
+      {"input": "pwwkew", "expected_output": "3"}
+    ],
+    "constraints": "0 <= s.length <= 5*10^4\ns consists of English letters, digits, symbols and spaces.",
+    "hints": [
+      "Use a sliding window with two pointers.",
+      "Use a set to track characters in the current window.",
+      "When a duplicate is found, shrink the window from the left."
+    ],
+    "solution_approach": "Sliding window: left pointer + set. Expand right, shrink left on duplicate. Track max window size.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "adobe", "paytm"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 82,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+  },
+  {
+    "title": "Container With Most Water",
+    "description": "You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i`th line are `(i, 0)` and `(i, height[i])`. Find two lines that together with the x-axis form a container that contains the most water.\n\n**Example:**\n```\nInput: height = [1,8,6,2,5,4,8,3,7]\nOutput: 49\n```",
+    "difficulty": "medium",
+    "category": "arrays",
+    "tags": ["array", "two-pointers", "greedy"],
+    "test_cases": [
+      {"input": "[1,8,6,2,5,4,8,3,7]", "expected_output": "49"},
+      {"input": "[1,1]", "expected_output": "1"}
+    ],
+    "constraints": "n >= 2\n0 <= height[i] <= 10^4",
+    "hints": [
+      "Start with two pointers at the extremes.",
+      "Area = min(height[lo], height[hi]) * (hi - lo).",
+      "Move the pointer with the smaller height inward."
+    ],
+    "solution_approach": "Two pointers from both ends. Compute area. Move shorter line inward. Track max area.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "goldman sachs"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 70,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/container-with-most-water/"
+  },
+  {
+    "title": "Maximum Depth of Binary Tree",
+    "description": "Given the `root` of a binary tree, return its maximum depth. Maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.\n\n**Example:**\n```\nInput: root = [3,9,20,null,null,15,7]\nOutput: 3\n```",
+    "difficulty": "easy",
+    "category": "trees",
+    "tags": ["tree", "dfs", "bfs", "recursion"],
+    "test_cases": [
+      {"input": "[3,9,20,null,null,15,7]", "expected_output": "3"},
+      {"input": "[1,null,2]", "expected_output": "2"},
+      {"input": "[]", "expected_output": "0"}
+    ],
+    "constraints": "The number of nodes is in [0, 10^4].\n-100 <= Node.val <= 100",
+    "hints": [
+      "Think recursively: depth = 1 + max(depth(left), depth(right)).",
+      "Base case: if node is None, return 0.",
+      "Can also do BFS level-by-level and count levels."
+    ],
+    "solution_approach": "Recursive DFS: maxDepth(root) = 0 if not root, else 1 + max(maxDepth(left), maxDepth(right)).",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "linkedin"],
+    "role_tags": ["sde-1"],
+    "times_asked": 65,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/"
+  },
+  {
+    "title": "Invert Binary Tree",
+    "description": "Given the `root` of a binary tree, invert the tree, and return its root.\n\n**Example:**\n```\nInput: root = [4,2,7,1,3,6,9]\nOutput: [4,7,2,9,6,3,1]\n```",
+    "difficulty": "easy",
+    "category": "trees",
+    "tags": ["tree", "recursion", "bfs"],
+    "test_cases": [
+      {"input": "[4,2,7,1,3,6,9]", "expected_output": "[4,7,2,9,6,3,1]"},
+      {"input": "[2,1,3]", "expected_output": "[2,3,1]"}
+    ],
+    "constraints": "The number of nodes is in [0, 100].\n-100 <= Node.val <= 100",
+    "hints": [
+      "Recursively swap left and right children.",
+      "Base case: if root is None, return None.",
+      "This is the problem Homebrew's creator couldn't solve for Google."
+    ],
+    "solution_approach": "DFS: swap root.left and root.right, then recursively invert both subtrees.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["google", "amazon", "facebook"],
+    "role_tags": ["sde-1"],
+    "times_asked": 60,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/invert-binary-tree/"
+  },
+  {
+    "title": "Validate Binary Search Tree",
+    "description": "Given the `root` of a binary tree, determine if it is a valid binary search tree (BST). A valid BST is defined as follows:\n- The left subtree contains only nodes with keys less than the node's key.\n- The right subtree contains only nodes with keys greater than the node's key.\n- Both left and right subtrees must also be BSTs.\n\n**Example:**\n```\nInput: root = [2,1,3]\nOutput: true\n```",
+    "difficulty": "medium",
+    "category": "trees",
+    "tags": ["tree", "recursion", "in-order-traversal"],
+    "test_cases": [
+      {"input": "[2,1,3]", "expected_output": "true"},
+      {"input": "[5,1,4,null,null,3,6]", "expected_output": "false"}
+    ],
+    "constraints": "The number of nodes is in [1, 10^4].\n-2^31 <= Node.val <= 2^31-1",
+    "hints": [
+      "Just checking left < root < right is not enough — you need to validate against ancestor bounds.",
+      "Pass min_val and max_val bounds down the recursion.",
+      "Or do an in-order traversal and verify it's strictly increasing."
+    ],
+    "solution_approach": "Recursive with bounds: validate(node, min=-inf, max=+inf). At each node: check min < val < max, recurse with updated bounds.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 73,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/validate-binary-search-tree/"
+  },
+  {
+    "title": "Lowest Common Ancestor of BST",
+    "description": "Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes `p` and `q` in the BST.\n\n**Example:**\n```\nInput: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8\nOutput: 6\n```",
+    "difficulty": "medium",
+    "category": "trees",
+    "tags": ["tree", "bst", "recursion"],
+    "test_cases": [
+      {"input": "[6,2,8,0,4,7,9]\np=2\nq=8", "expected_output": "6"},
+      {"input": "[6,2,8,0,4,7,9]\np=2\nq=4", "expected_output": "2"}
+    ],
+    "constraints": "The number of nodes is in [2, 10^5].\nAll Node.val are unique.",
+    "hints": [
+      "In a BST, use the ordering property.",
+      "If both p and q are smaller than root, LCA is in left subtree.",
+      "If both are larger, LCA is in right subtree. Otherwise, root is LCA."
+    ],
+    "solution_approach": "Traverse: if both < root go left, if both > root go right, else return current node as LCA.",
+    "optimal_complexity": "O(h)",
+    "company_tags": ["amazon", "facebook", "microsoft"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 65,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/"
+  },
+  {
+    "title": "Kth Largest Element in an Array",
+    "description": "Given an integer array `nums` and an integer `k`, return the `k`th largest element in the array. Note that it is the kth largest element in the sorted order, not the kth distinct element.\n\n**Example:**\n```\nInput: nums = [3,2,1,5,6,4], k = 2\nOutput: 5\n```",
+    "difficulty": "medium",
+    "category": "heaps",
+    "tags": ["array", "heap", "quickselect"],
+    "test_cases": [
+      {"input": "[3,2,1,5,6,4]\n2", "expected_output": "5"},
+      {"input": "[3,2,3,1,2,4,5,5,6]\n4", "expected_output": "4"}
+    ],
+    "constraints": "1 <= k <= nums.length <= 10^5\n-10^4 <= nums[i] <= 10^4",
+    "hints": [
+      "A min-heap of size k is simple and O(n log k).",
+      "Quickselect gives average O(n).",
+      "Which would you use in production? Why?"
+    ],
+    "solution_approach": "Min-heap of size k: push each element, pop when size > k. Top of heap is kth largest.",
+    "optimal_complexity": "O(n log k)",
+    "company_tags": ["amazon", "facebook", "microsoft", "google"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 70,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/kth-largest-element-in-an-array/"
+  },
+  {
+    "title": "Course Schedule",
+    "description": "There are `numCourses` courses labeled `0` to `numCourses-1`. You are given an array `prerequisites` where `prerequisites[i] = [a, b]` means you must take course `b` first to take course `a`. Return `true` if you can finish all courses, `false` otherwise.\n\n**Example:**\n```\nInput: numCourses = 2, prerequisites = [[1,0]]\nOutput: true\n\nInput: numCourses = 2, prerequisites = [[1,0],[0,1]]\nOutput: false\n```",
+    "difficulty": "medium",
+    "category": "graphs",
+    "tags": ["graph", "topological-sort", "bfs", "dfs", "cycle-detection"],
+    "test_cases": [
+      {"input": "2\n[[1,0]]", "expected_output": "true"},
+      {"input": "2\n[[1,0],[0,1]]", "expected_output": "false"}
+    ],
+    "constraints": "1 <= numCourses <= 2000\n0 <= prerequisites.length <= 5000\nNo duplicate edges.",
+    "hints": [
+      "This is a cycle detection problem on a directed graph.",
+      "Topological sort (Kahn's algorithm with in-degree) works well.",
+      "DFS with 3-color marking (white/gray/black) is another approach."
+    ],
+    "solution_approach": "BFS topological sort: compute in-degrees, add 0-in-degree nodes to queue, process. If all nodes processed, no cycle.",
+    "optimal_complexity": "O(V+E)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "uber"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 76,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/course-schedule/"
+  },
+  {
+    "title": "Coin Change",
+    "description": "You are given an integer array `coins` representing coins of different denominations and an integer `amount`. Return the fewest number of coins that you need to make up that amount. If that amount cannot be made up by any combination, return `-1`.\n\n**Example:**\n```\nInput: coins = [1,5,11], amount = 11\nOutput: 2 (5+5+1 vs 11)\n\nActually:\nInput: coins = [1,5,11], amount = 11\nOutput: 1\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["dynamic-programming", "bfs"],
+    "test_cases": [
+      {"input": "[1,5,11]\n11", "expected_output": "1"},
+      {"input": "[2]\n3", "expected_output": "-1"},
+      {"input": "[1,2,5]\n11", "expected_output": "3"}
+    ],
+    "constraints": "1 <= coins.length <= 12\n1 <= coins[i] <= 2^31 - 1\n0 <= amount <= 10^4",
+    "hints": [
+      "Define dp[i] = minimum coins to make amount i.",
+      "For each amount from 1 to target, try all coins.",
+      "dp[i] = min(dp[i - coin] + 1) for each valid coin."
+    ],
+    "solution_approach": "Bottom-up DP: dp[0]=0, dp[i]=min over all coins c: dp[i-c]+1. Initialize dp with infinity.",
+    "optimal_complexity": "O(amount * n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "goldman sachs"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 72,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/coin-change/"
+  },
+  {
+    "title": "Longest Common Subsequence",
+    "description": "Given two strings `text1` and `text2`, return the length of their longest common subsequence. A subsequence is a sequence derived by deleting some or no characters without changing the relative order.\n\n**Example:**\n```\nInput: text1 = \"abcde\", text2 = \"ace\"\nOutput: 3 (\"ace\")\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["dynamic-programming", "string"],
+    "test_cases": [
+      {"input": "abcde ace", "expected_output": "3"},
+      {"input": "abc abc", "expected_output": "3"},
+      {"input": "abc def", "expected_output": "0"}
+    ],
+    "constraints": "1 <= text1.length, text2.length <= 1000\nBoth strings consist of lowercase English letters.",
+    "hints": [
+      "Define dp[i][j] = LCS of text1[:i] and text2[:j].",
+      "If text1[i-1] == text2[j-1]: dp[i][j] = dp[i-1][j-1] + 1",
+      "Else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])"
+    ],
+    "solution_approach": "2D DP table. Match characters or skip one. Can optimize to O(min(m,n)) space with rolling array.",
+    "optimal_complexity": "O(m*n)",
+    "company_tags": ["amazon", "google", "microsoft", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2", "ml-engineer"],
+    "times_asked": 65,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/longest-common-subsequence/"
+  },
+  {
+    "title": "House Robber",
+    "description": "You are a robber planning to rob houses along a street. Adjacent houses have security systems connected — if adjacent houses are robbed on the same night, it will alert the police. Given an integer array `nums` representing the amount of money of each house, return the maximum amount you can rob without alerting the police.\n\n**Example:**\n```\nInput: nums = [1,2,3,1]\nOutput: 4\nExplanation: Rob house 1 (1) + house 3 (3) = 4\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["dynamic-programming", "array"],
+    "test_cases": [
+      {"input": "[1,2,3,1]", "expected_output": "4"},
+      {"input": "[2,7,9,3,1]", "expected_output": "12"}
+    ],
+    "constraints": "1 <= nums.length <= 100\n0 <= nums[i] <= 400",
+    "hints": [
+      "At each house, you either rob it (and skip prev) or skip it.",
+      "dp[i] = max(dp[i-1], dp[i-2] + nums[i])",
+      "Optimize to O(1) space using two variables."
+    ],
+    "solution_approach": "DP: prev2 = 0, prev1 = 0. For each num: curr = max(prev1, prev2 + num). Shift: prev2 = prev1, prev1 = curr.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "microsoft", "airbnb"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 68,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/house-robber/"
+  },
+  {
+    "title": "Word Search",
+    "description": "Given an `m x n` grid of characters `board` and a string `word`, return `true` if `word` exists in the grid. The word can be constructed from letters of sequentially adjacent cells (horizontally or vertically adjacent). The same letter cell may not be used more than once.\n\n**Example:**\n```\nInput: board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCCED\"\nOutput: true\n```",
+    "difficulty": "medium",
+    "category": "graphs",
+    "tags": ["backtracking", "dfs", "matrix"],
+    "test_cases": [
+      {"input": "[[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]]\nABCCED", "expected_output": "true"},
+      {"input": "[[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]]\nABCB", "expected_output": "false"}
+    ],
+    "constraints": "m == board.length, n == board[i].length\n1 <= m, n <= 6\n1 <= word.length <= 15",
+    "hints": [
+      "Use DFS with backtracking.",
+      "Mark the current cell as visited before exploring, unmark after.",
+      "Check bounds and character match before recursing."
+    ],
+    "solution_approach": "DFS from each cell. Mark visited. Try all 4 directions. Backtrack by unmarking. Base case: index == len(word) → true.",
+    "optimal_complexity": "O(m*n*4^L)",
+    "company_tags": ["amazon", "microsoft", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 60,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/word-search/"
+  },
+  {
+    "title": "Find Minimum in Rotated Sorted Array",
+    "description": "Suppose an array of length `n` sorted in ascending order is rotated between 1 and n times. Given the rotated array `nums`, return the minimum element.\n\n**Example:**\n```\nInput: nums = [3,4,5,1,2]\nOutput: 1\n\nInput: nums = [4,5,6,7,0,1,2]\nOutput: 0\n```",
+    "difficulty": "medium",
+    "category": "binary_search",
+    "tags": ["binary-search", "array"],
+    "test_cases": [
+      {"input": "[3,4,5,1,2]", "expected_output": "1"},
+      {"input": "[4,5,6,7,0,1,2]", "expected_output": "0"},
+      {"input": "[11,13,15,17]", "expected_output": "11"}
+    ],
+    "constraints": "n >= 1\nAll integers are unique.",
+    "hints": [
+      "The minimum is the only element smaller than its predecessor.",
+      "Binary search: compare mid with right. If mid > right, minimum is in right half.",
+      "If mid < right, minimum is in left half (including mid)."
+    ],
+    "solution_approach": "Binary search: if nums[mid] > nums[right], search right (lo=mid+1). Else search left (hi=mid). Return nums[lo].",
+    "optimal_complexity": "O(log n)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 68,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/"
+  },
+  {
+    "title": "Merge Two Sorted Lists",
+    "description": "You are given the heads of two sorted linked lists `list1` and `list2`. Merge the two lists into one sorted list. Return the head of the merged linked list.\n\n**Example:**\n```\nInput: list1 = [1,2,4], list2 = [1,3,4]\nOutput: [1,1,2,3,4,4]\n```",
+    "difficulty": "easy",
+    "category": "linked_lists",
+    "tags": ["linked-list", "recursion"],
+    "test_cases": [
+      {"input": "[1,2,4]\n[1,3,4]", "expected_output": "[1,1,2,3,4,4]"},
+      {"input": "[]\n[]", "expected_output": "[]"},
+      {"input": "[]\n[0]", "expected_output": "[0]"}
+    ],
+    "constraints": "0 <= length of each list <= 50\n-100 <= Node.val <= 100\nBoth lists are sorted in non-decreasing order.",
+    "hints": [
+      "Use a dummy head node to simplify the logic.",
+      "Compare current nodes of both lists. Append smaller one to result.",
+      "Don't forget to append remaining nodes after one list is exhausted."
+    ],
+    "solution_approach": "Dummy head + pointer. While both non-empty, append smaller. Append remaining list. Return dummy.next.",
+    "optimal_complexity": "O(m+n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft"],
+    "role_tags": ["sde-1"],
+    "times_asked": 70,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/merge-two-sorted-lists/"
+  },
+  {
+    "title": "Linked List Cycle",
+    "description": "Given `head`, the head of a linked list, determine if the linked list has a cycle in it. Return `true` if there is a cycle, `false` otherwise.\n\n**Example:**\n```\nInput: head = [3,2,0,-4], pos = 1 (tail connects to node at index 1)\nOutput: true\n```",
+    "difficulty": "easy",
+    "category": "linked_lists",
+    "tags": ["linked-list", "two-pointers", "floyd-cycle"],
+    "test_cases": [
+      {"input": "[3,2,0,-4]\npos=1", "expected_output": "true"},
+      {"input": "[1,2]\npos=0", "expected_output": "true"},
+      {"input": "[1]\npos=-1", "expected_output": "false"}
+    ],
+    "constraints": "0 <= number of nodes <= 10^4\n-10^5 <= Node.val <= 10^5\npos is -1 or a valid index.",
+    "hints": [
+      "Floyd's Cycle Detection (tortoise and hare).",
+      "Slow pointer moves 1 step, fast pointer moves 2 steps.",
+      "If they meet, there's a cycle. If fast reaches null, no cycle."
+    ],
+    "solution_approach": "Floyd's: slow=head, fast=head. While fast and fast.next: slow=slow.next, fast=fast.next.next. Return slow==fast.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft"],
+    "role_tags": ["sde-1"],
+    "times_asked": 68,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/linked-list-cycle/"
+  },
+  {
+    "title": "Min Stack",
+    "description": "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.\n\nImplement the `MinStack` class:\n- `push(val)` — pushes the element onto the stack\n- `pop()` — removes the element on top\n- `top()` — gets the top element\n- `getMin()` — retrieves the minimum element\n\nAll operations must run in O(1) time.",
+    "difficulty": "medium",
+    "category": "stacks",
+    "tags": ["stack", "design"],
+    "test_cases": [
+      {"input": "[[\"MinStack\",\"push\",\"push\",\"push\",\"getMin\",\"pop\",\"top\",\"getMin\"],[[], [-2],[0],[-3],[],[],[],[]]]", "expected_output": "[null,null,null,null,-3,null,0,-2]"}
+    ],
+    "constraints": "-2^31 <= val <= 2^31-1\nPop/top/getMin called on non-empty stacks.",
+    "hints": [
+      "Use two stacks: one for values, one for minimums.",
+      "Push to min-stack only when new value <= current min.",
+      "Or store (value, current_min) tuples in a single stack."
+    ],
+    "solution_approach": "Two stacks: main_stack and min_stack. On push: if val <= min_stack.top(), push to min_stack. On pop: if val == min_stack.top(), pop min_stack too.",
+    "optimal_complexity": "O(1)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 65,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/min-stack/"
+  },
+  {
+    "title": "Subsets",
+    "description": "Given an integer array `nums` of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return in any order.\n\n**Example:**\n```\nInput: nums = [1,2,3]\nOutput: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]\n```",
+    "difficulty": "medium",
+    "category": "backtracking",
+    "tags": ["array", "backtracking", "bit-manipulation"],
+    "test_cases": [
+      {"input": "[1,2,3]", "expected_output": "[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]"},
+      {"input": "[0]", "expected_output": "[[],[0]]"}
+    ],
+    "constraints": "1 <= nums.length <= 10\nAll nums are unique.\n-10 <= nums[i] <= 10",
+    "hints": [
+      "Use backtracking: at each position, either include or exclude the element.",
+      "Or iteratively: start with [], for each number, add it to all existing subsets.",
+      "Or bit manipulation: 2^n subsets, use bit mask."
+    ],
+    "solution_approach": "Backtracking: dfs(start, current). At each call, add current copy to result. Try adding each element from start onwards.",
+    "optimal_complexity": "O(2^n * n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 65,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/subsets/"
+  },
+  {
+    "title": "Permutations",
+    "description": "Given an array `nums` of distinct integers, return all the possible permutations. You can return the answer in any order.\n\n**Example:**\n```\nInput: nums = [1,2,3]\nOutput: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]\n```",
+    "difficulty": "medium",
+    "category": "backtracking",
+    "tags": ["array", "backtracking"],
+    "test_cases": [
+      {"input": "[1,2,3]", "expected_output": "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]"},
+      {"input": "[0,1]", "expected_output": "[[0,1],[1,0]]"}
+    ],
+    "constraints": "1 <= nums.length <= 6\nAll integers are unique.",
+    "hints": [
+      "Use backtracking with a 'used' set or swap elements.",
+      "Pick each unused element for the current position, recurse for the rest.",
+      "Base case: current permutation has length n."
+    ],
+    "solution_approach": "Backtracking: track used elements. For each unused num, add to current, mark used, recurse, unmark, remove.",
+    "optimal_complexity": "O(n! * n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 62,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/permutations/"
+  },
+  {
+    "title": "Jump Game",
+    "description": "You are given an integer array `nums`. You are initially positioned at the first index, and each element in the array represents your maximum jump length at that position. Return `true` if you can reach the last index, `false` otherwise.\n\n**Example:**\n```\nInput: nums = [2,3,1,1,4]\nOutput: true\n\nInput: nums = [3,2,1,0,4]\nOutput: false\n```",
+    "difficulty": "medium",
+    "category": "greedy",
+    "tags": ["array", "greedy", "dynamic-programming"],
+    "test_cases": [
+      {"input": "[2,3,1,1,4]", "expected_output": "true"},
+      {"input": "[3,2,1,0,4]", "expected_output": "false"}
+    ],
+    "constraints": "1 <= nums.length <= 10^4\n0 <= nums[i] <= 10^5",
+    "hints": [
+      "Track the farthest reachable index.",
+      "At each step, update max_reach = max(max_reach, i + nums[i]).",
+      "If i > max_reach at any point, return false."
+    ],
+    "solution_approach": "Greedy: track max_reach. For each index, if i > max_reach, return false. Update max_reach = max(max_reach, i + nums[i]).",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 65,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/jump-game/"
+  },
+  {
+    "title": "Gas Station",
+    "description": "There are `n` gas stations along a circular route. You are given integer arrays `gas` and `cost`. Return the starting gas station's index if you can travel around the circuit once in the clockwise direction, otherwise return `-1`.\n\n**Example:**\n```\nInput: gas = [1,2,3,4,5], cost = [3,4,5,1,2]\nOutput: 3\n```",
+    "difficulty": "medium",
+    "category": "greedy",
+    "tags": ["array", "greedy"],
+    "test_cases": [
+      {"input": "[1,2,3,4,5]\n[3,4,5,1,2]", "expected_output": "3"},
+      {"input": "[2,3,4]\n[3,4,3]", "expected_output": "-1"}
+    ],
+    "constraints": "n == gas.length == cost.length\n1 <= n <= 10^5\n0 <= gas[i], cost[i] <= 10^4",
+    "hints": [
+      "If total gas < total cost, no solution exists.",
+      "Start from index 0. Track current tank. If tank < 0, reset start to i+1.",
+      "If we can complete the circuit from some start, that's the answer."
+    ],
+    "solution_approach": "Greedy: if sum(gas) < sum(cost) → -1. Else, find start: track tank, reset to i+1 when tank < 0.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "facebook", "google"],
+    "role_tags": ["sde-2"],
+    "times_asked": 55,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/gas-station/"
+  },
+  {
+    "title": "Search in Rotated Sorted Array",
+    "description": "Given a rotated sorted array `nums` (with distinct values) and integer `target`, return the index of `target` if it is in `nums`, or `-1` if it is not.\n\n**Example:**\n```\nInput: nums = [4,5,6,7,0,1,2], target = 0\nOutput: 4\n```",
+    "difficulty": "medium",
+    "category": "binary_search",
+    "tags": ["array", "binary-search"],
+    "test_cases": [
+      {"input": "[4,5,6,7,0,1,2]\n0", "expected_output": "4"},
+      {"input": "[4,5,6,7,0,1,2]\n3", "expected_output": "-1"},
+      {"input": "[1]\n0", "expected_output": "-1"}
+    ],
+    "constraints": "1 <= nums.length <= 5000\nAll values are unique.",
+    "hints": [
+      "Modified binary search: one half is always sorted.",
+      "Check which half is sorted. Determine if target lies in sorted half.",
+      "Narrow search to the appropriate half."
+    ],
+    "solution_approach": "Binary search: check if left half is sorted. If target in sorted left, search left. Else search right. Mirror for right.",
+    "optimal_complexity": "O(log n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "uber"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 72,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/search-in-rotated-sorted-array/"
+  },
+  {
+    "title": "Daily Temperatures",
+    "description": "Given an array of integers `temperatures` representing daily temperatures, return an array `answer` such that `answer[i]` is the number of days until a warmer temperature. If no future day is warmer, set `answer[i] = 0`.\n\n**Example:**\n```\nInput: temperatures = [73,74,75,71,69,72,76,73]\nOutput: [1,1,4,2,1,1,0,0]\n```",
+    "difficulty": "medium",
+    "category": "stacks",
+    "tags": ["array", "stack", "monotonic-stack"],
+    "test_cases": [
+      {"input": "[73,74,75,71,69,72,76,73]", "expected_output": "[1,1,4,2,1,1,0,0]"},
+      {"input": "[30,40,50,60]", "expected_output": "[1,1,1,0]"}
+    ],
+    "constraints": "1 <= temperatures.length <= 10^5\n30 <= temperatures[i] <= 100",
+    "hints": [
+      "Use a monotonic decreasing stack of indices.",
+      "For each temperature, pop indices from stack where temp is smaller.",
+      "The wait time = current_index - popped_index."
+    ],
+    "solution_approach": "Monotonic stack: push indices. When temp[i] > temp[stack.top()], pop and compute answer[popped] = i - popped.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 62,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/daily-temperatures/"
+  },
+  {
+    "title": "Pacific Atlantic Water Flow",
+    "description": "There is an m×n rectangular island that borders both the Pacific and Atlantic oceans. Rain water can flow to neighboring cells that have an equal or lower height. Return a list of grid coordinates where water can flow to both the Pacific and Atlantic oceans.\n\n**Example:**\n```\nInput: heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]\nOutput: [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]\n```",
+    "difficulty": "medium",
+    "category": "graphs",
+    "tags": ["graph", "bfs", "dfs", "matrix"],
+    "test_cases": [
+      {"input": "[[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]", "expected_output": "[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]"}
+    ],
+    "constraints": "m == heights.length, n == heights[0].length\n1 <= m, n <= 200\n0 <= heights[i][j] <= 10^5",
+    "hints": [
+      "Reverse thinking: instead of water flowing down, trace from ocean upwards.",
+      "BFS/DFS from Pacific border cells, mark reachable.",
+      "BFS/DFS from Atlantic border cells, mark reachable.",
+      "Intersection is the answer."
+    ],
+    "solution_approach": "Two BFS passes: from Pacific borders and Atlantic borders (reverse flow). Return cells reachable from both.",
+    "optimal_complexity": "O(m*n)",
+    "company_tags": ["amazon", "google"],
+    "role_tags": ["sde-2"],
+    "times_asked": 58,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/pacific-atlantic-water-flow/"
+  },
+  {
+    "title": "Longest Palindromic Substring",
+    "description": "Given a string `s`, return the longest palindromic substring in `s`.\n\n**Example:**\n```\nInput: s = \"babad\"\nOutput: \"bab\" (or \"aba\")\n\nInput: s = \"cbbd\"\nOutput: \"bb\"\n```",
+    "difficulty": "medium",
+    "category": "strings",
+    "tags": ["string", "dynamic-programming", "expand-around-center"],
+    "test_cases": [
+      {"input": "babad", "expected_output": "bab"},
+      {"input": "cbbd", "expected_output": "bb"},
+      {"input": "a", "expected_output": "a"}
+    ],
+    "constraints": "1 <= s.length <= 1000\ns consists of digits and English letters.",
+    "hints": [
+      "Expand around center approach: for each position, expand outward while characters match.",
+      "Consider both odd-length (center at i) and even-length (center between i and i+1) palindromes.",
+      "Track the longest found palindrome."
+    ],
+    "solution_approach": "Expand around center: for each i, expand for odd and even cases. O(n²) time, O(1) space.",
+    "optimal_complexity": "O(n²)",
+    "company_tags": ["amazon", "microsoft", "facebook", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 65,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/longest-palindromic-substring/"
+  },
+  {
+    "title": "Spiral Matrix",
+    "description": "Given an `m x n` matrix, return all elements of the matrix in spiral order.\n\n**Example:**\n```\nInput: matrix = [[1,2,3],[4,5,6],[7,8,9]]\nOutput: [1,2,3,6,9,8,7,4,5]\n```",
+    "difficulty": "medium",
+    "category": "arrays",
+    "tags": ["array", "matrix", "simulation"],
+    "test_cases": [
+      {"input": "[[1,2,3],[4,5,6],[7,8,9]]", "expected_output": "[1,2,3,6,9,8,7,4,5]"},
+      {"input": "[[1,2,3,4],[5,6,7,8],[9,10,11,12]]", "expected_output": "[1,2,3,4,8,12,11,10,9,5,6,7]"}
+    ],
+    "constraints": "m == matrix.length, n == matrix[i].length\n1 <= m, n <= 10",
+    "hints": [
+      "Track four boundaries: top, bottom, left, right.",
+      "Traverse right → down → left → up, shrinking boundaries each time.",
+      "Stop when top > bottom or left > right."
+    ],
+    "solution_approach": "Four boundaries approach: traverse right (top row), down (right col), left (bottom row), up (left col). Shrink bounds.",
+    "optimal_complexity": "O(m*n)",
+    "company_tags": ["amazon", "microsoft", "google", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 60,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/spiral-matrix/"
+  },
+  {
+    "title": "Rotate Image",
+    "description": "You are given an n×n 2D matrix representing an image. Rotate the image by 90 degrees clockwise. You must rotate the matrix in-place.\n\n**Example:**\n```\nInput: matrix = [[1,2,3],[4,5,6],[7,8,9]]\nOutput: [[7,4,1],[8,5,2],[9,6,3]]\n```",
+    "difficulty": "medium",
+    "category": "arrays",
+    "tags": ["array", "matrix", "math"],
+    "test_cases": [
+      {"input": "[[1,2,3],[4,5,6],[7,8,9]]", "expected_output": "[[7,4,1],[8,5,2],[9,6,3]]"},
+      {"input": "[[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]", "expected_output": "[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]"}
+    ],
+    "constraints": "n == matrix.length == matrix[i].length\n1 <= n <= 20\n-1000 <= matrix[i][j] <= 1000",
+    "hints": [
+      "90° clockwise = transpose + reverse each row.",
+      "Transpose: swap matrix[i][j] with matrix[j][i].",
+      "Then reverse each row in place."
+    ],
+    "solution_approach": "Transpose the matrix (swap across diagonal), then reverse each row. Two in-place operations.",
+    "optimal_complexity": "O(n²)",
+    "company_tags": ["amazon", "microsoft", "google"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 58,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/rotate-image/"
+  },
+  {
+    "title": "Implement Trie (Prefix Tree)",
+    "description": "A trie (pronounced 'try') or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. Implement the `Trie` class:\n- `insert(word)` — inserts string word into the trie\n- `search(word)` — returns true if word is in the trie\n- `startsWith(prefix)` — returns true if any word starts with prefix\n\n**Example:**\n```\nTrie trie = new Trie();\ntrie.insert(\"apple\");\ntrie.search(\"apple\"); // true\ntrie.startsWith(\"app\"); // true\n```",
+    "difficulty": "medium",
+    "category": "tries",
+    "tags": ["trie", "string", "design"],
+    "test_cases": [
+      {"input": "[[\"Trie\",\"insert\",\"search\",\"search\",\"startsWith\",\"insert\",\"search\"],[[], [\"apple\"],[\"apple\"],[\"app\"],[\"app\"],[\"app\"],[\"app\"]]]", "expected_output": "[null,null,true,false,true,null,true]"}
+    ],
+    "constraints": "1 <= word.length <= 2000\nword and prefix consist of lowercase English letters.",
+    "hints": [
+      "Each node has 26 children (one per letter) and an is_end flag.",
+      "Insert: traverse and create nodes as needed.",
+      "Search requires matching all chars AND is_end=true. startsWith just needs matching."
+    ],
+    "solution_approach": "TrieNode with children dict and is_end bool. Insert: create nodes along path. Search/StartsWith: traverse path, check is_end.",
+    "optimal_complexity": "O(L) per operation",
+    "company_tags": ["google", "facebook", "microsoft", "amazon"],
+    "role_tags": ["sde-2"],
+    "times_asked": 65,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/implement-trie-prefix-tree/"
+  },
+  {
+    "title": "Word Break",
+    "description": "Given a string `s` and a dictionary of strings `wordDict`, return `true` if `s` can be segmented into a space-separated sequence of one or more dictionary words.\n\n**Example:**\n```\nInput: s = \"leetcode\", wordDict = [\"leet\",\"code\"]\nOutput: true\n\nInput: s = \"applepenapple\", wordDict = [\"apple\",\"pen\"]\nOutput: true\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["dynamic-programming", "string", "trie", "memoization"],
+    "test_cases": [
+      {"input": "leetcode\n[\"leet\",\"code\"]", "expected_output": "true"},
+      {"input": "catsandog\n[\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]", "expected_output": "false"}
+    ],
+    "constraints": "1 <= s.length <= 300\n1 <= wordDict.length <= 1000",
+    "hints": [
+      "dp[i] = true if s[:i] can be segmented.",
+      "For each i, check all j < i: if dp[j] is true and s[j:i] is in dict.",
+      "Initialize dp[0] = true (empty string)."
+    ],
+    "solution_approach": "DP: dp[0]=True. For i in 1..n: for j in 0..i: if dp[j] and s[j:i] in word_set: dp[i]=True.",
+    "optimal_complexity": "O(n² * m)",
+    "company_tags": ["amazon", "google", "facebook", "bloomberg"],
+    "role_tags": ["sde-2"],
+    "times_asked": 62,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/word-break/"
+  },
+  {
+    "title": "Find Median from Data Stream",
+    "description": "The MedianFinder class finds the median from a data stream. Implement:\n- `addNum(int num)` — adds an integer num from the stream\n- `findMedian()` — returns the median of current data\n\n**Example:**\n```\nMedianFinder mf = new MedianFinder();\nmf.addNum(1); mf.addNum(2);\nmf.findMedian(); // 1.5\nmf.addNum(3);\nmf.findMedian(); // 2.0\n```",
+    "difficulty": "hard",
+    "category": "heaps",
+    "tags": ["heap", "two-heaps", "design", "data-stream"],
+    "test_cases": [
+      {"input": "[[\"MedianFinder\",\"addNum\",\"addNum\",\"findMedian\",\"addNum\",\"findMedian\"],[[], [1],[2],[],[3],[]]]", "expected_output": "[null,null,null,1.5,null,2.0]"}
+    ],
+    "constraints": "-10^5 <= num <= 10^5\nAt most 5*10^4 calls to addNum and findMedian.",
+    "hints": [
+      "Use two heaps: max-heap for lower half, min-heap for upper half.",
+      "Balance: sizes differ by at most 1.",
+      "Median = top of larger heap, or average of both tops if equal sizes."
+    ],
+    "solution_approach": "Max-heap (lo) + min-heap (hi). Balance sizes. Median = lo.top() or (lo.top()+hi.top())/2.",
+    "optimal_complexity": "O(log n) add, O(1) find",
+    "company_tags": ["amazon", "google", "facebook", "microsoft"],
+    "role_tags": ["sde-2"],
+    "times_asked": 60,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/find-median-from-data-stream/"
+  },
+  {
+    "title": "Trapping Rain Water",
+    "description": "Given `n` non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.\n\n**Example:**\n```\nInput: height = [0,1,0,2,1,0,1,3,2,1,2,1]\nOutput: 6\n```",
+    "difficulty": "hard",
+    "category": "arrays",
+    "tags": ["array", "two-pointers", "stack", "dynamic-programming"],
+    "test_cases": [
+      {"input": "[0,1,0,2,1,0,1,3,2,1,2,1]", "expected_output": "6"},
+      {"input": "[4,2,0,3,2,5]", "expected_output": "9"}
+    ],
+    "constraints": "n >= 0\n0 <= height[i] <= 3*10^4",
+    "hints": [
+      "Water at position i = min(max_left, max_right) - height[i].",
+      "Precompute max_left and max_right arrays.",
+      "Or use two pointers: move the side with smaller max inward."
+    ],
+    "solution_approach": "Two pointers: left=0, right=n-1. Track max_left, max_right. Move smaller side, add water = max - height[pointer].",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "goldman sachs"],
+    "role_tags": ["sde-2"],
+    "times_asked": 75,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/trapping-rain-water/"
+  },
+  {
+    "title": "Merge K Sorted Lists",
+    "description": "You are given an array of `k` linked-lists, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.\n\n**Example:**\n```\nInput: lists = [[1,4,5],[1,3,4],[2,6]]\nOutput: [1,1,2,3,4,4,5,6]\n```",
+    "difficulty": "hard",
+    "category": "heaps",
+    "tags": ["linked-list", "heap", "divide-and-conquer"],
+    "test_cases": [
+      {"input": "[[1,4,5],[1,3,4],[2,6]]", "expected_output": "[1,1,2,3,4,4,5,6]"},
+      {"input": "[]", "expected_output": "[]"}
+    ],
+    "constraints": "k == lists.length\n0 <= k <= 10^4\n0 <= each list length <= 500",
+    "hints": [
+      "Use a min-heap of size k.",
+      "Push the first element of each list into the heap.",
+      "Pop minimum, add to result, push next element from same list."
+    ],
+    "solution_approach": "Min-heap: push (val, list_idx, node) for each list head. Pop min, add to result, push next node from same list.",
+    "optimal_complexity": "O(N log k)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft", "linkedin"],
+    "role_tags": ["sde-2"],
+    "times_asked": 72,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/merge-k-sorted-lists/"
+  },
+  {
+    "title": "Longest Increasing Subsequence",
+    "description": "Given an integer array `nums`, return the length of the longest strictly increasing subsequence.\n\n**Example:**\n```\nInput: nums = [10,9,2,5,3,7,101,18]\nOutput: 4\nExplanation: [2,3,7,101] is the longest increasing subsequence.\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["dynamic-programming", "binary-search", "patience-sorting"],
+    "test_cases": [
+      {"input": "[10,9,2,5,3,7,101,18]", "expected_output": "4"},
+      {"input": "[0,1,0,3,2,3]", "expected_output": "4"},
+      {"input": "[7,7,7,7,7,7,7]", "expected_output": "1"}
+    ],
+    "constraints": "1 <= nums.length <= 2500\n-10^4 <= nums[i] <= 10^4",
+    "hints": [
+      "DP: dp[i] = length of LIS ending at index i. O(n²).",
+      "For O(n log n): maintain a sorted array 'tails' of smallest tail elements.",
+      "Use binary search to find the right position in tails for each element."
+    ],
+    "solution_approach": "O(n log n): Patience sorting with tails array. For each num, binary search for insertion position. Length of tails is the answer.",
+    "optimal_complexity": "O(n log n)",
+    "company_tags": ["amazon", "google", "microsoft", "facebook"],
+    "role_tags": ["sde-2"],
+    "times_asked": 65,
+    "last_asked_year": 2024,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/longest-increasing-subsequence/"
+  },
+  {
+    "title": "Word Ladder",
+    "description": "A word transformation is a sequence of transformations such that each pair of adjacent words differs by exactly one letter, and every intermediate word must exist in `wordList`. Given `beginWord`, `endWord`, and `wordList`, return the number of words in the shortest transformation sequence from `beginWord` to `endWord`, or 0 if no such sequence exists.\n\n**Example:**\n```\nInput: beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]\nOutput: 5\nExplanation: hit → hot → dot → dog → cog\n```",
+    "difficulty": "hard",
+    "category": "graphs",
+    "tags": ["bfs", "graph", "string", "hash-set"],
+    "test_cases": [
+      {"input": "hit cog [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]", "expected_output": "5"},
+      {"input": "hit cog [\"hot\",\"dot\",\"dog\",\"lot\",\"log\"]", "expected_output": "0"}
+    ],
+    "constraints": "1 <= beginWord.length <= 10\nAll words have the same length.\nAll words consist of lowercase English letters.",
+    "hints": [
+      "Model as BFS on a graph where words are nodes and edges connect words differing by one letter.",
+      "For each word in queue, try changing each position to each letter.",
+      "If new word is in wordList, add to queue. Track levels for shortest path."
+    ],
+    "solution_approach": "BFS: queue starts with (beginWord, 1). For each word, generate all 1-edit-distance words. If in wordList, enqueue. If matches endWord, return level.",
+    "optimal_complexity": "O(M² * N)",
+    "company_tags": ["amazon", "google", "facebook", "microsoft"],
+    "role_tags": ["sde-2"],
+    "times_asked": 60,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/word-ladder/"
+  },
+  {
+    "title": "Task Scheduler",
+    "description": "Given a characters array `tasks` (CPU tasks, each labeled A-Z) and an integer `n` (cooldown period), return the minimum number of intervals the CPU needs to finish all the tasks. Each interval the CPU can be idle or complete a task. Same tasks must wait n intervals between executions.\n\n**Example:**\n```\nInput: tasks = [\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"], n = 2\nOutput: 8\nExplanation: A→B→idle→A→B→idle→A→B\n```",
+    "difficulty": "medium",
+    "category": "greedy",
+    "tags": ["array", "greedy", "heap", "counting"],
+    "test_cases": [
+      {"input": "[\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"]\n2", "expected_output": "8"},
+      {"input": "[\"A\",\"A\",\"A\",\"B\",\"B\",\"B\"]\n0", "expected_output": "6"}
+    ],
+    "constraints": "1 <= tasks.length <= 10^4\ntasks[i] is uppercase English letter.\n0 <= n <= 100",
+    "hints": [
+      "The most frequent task determines the minimum time.",
+      "Formula: (max_freq - 1) * (n + 1) + count_of_max_freq_tasks.",
+      "But answer is at least len(tasks). Return max of formula and len(tasks)."
+    ],
+    "solution_approach": "Count max frequency. Formula = (max_count - 1) * (n + 1) + num_tasks_with_max_count. Answer = max(this, len(tasks)).",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "facebook", "microsoft"],
+    "role_tags": ["sde-2"],
+    "times_asked": 58,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/task-scheduler/"
+  },
+  {
+    "title": "Decode Ways",
+    "description": "A message containing letters from A-Z is encoded with numbers: 'A'→1, 'B'→2, ..., 'Z'→26. Given a string `s` of digits, return the number of ways to decode it.\n\n**Example:**\n```\nInput: s = \"226\"\nOutput: 3\nExplanation: \"BZ\" (2,26), \"VF\" (22,6), \"BBF\" (2,2,6)\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["string", "dynamic-programming"],
+    "test_cases": [
+      {"input": "12", "expected_output": "2"},
+      {"input": "226", "expected_output": "3"},
+      {"input": "06", "expected_output": "0"}
+    ],
+    "constraints": "1 <= s.length <= 100\ns contains only digits and may contain leading zeros.",
+    "hints": [
+      "dp[i] = number of ways to decode s[:i].",
+      "Single digit: if s[i] != '0', dp[i] += dp[i-1].",
+      "Two digits: if 10 <= int(s[i-1:i+1]) <= 26, dp[i] += dp[i-2]."
+    ],
+    "solution_approach": "DP with O(1) space using two variables. Check single-digit and two-digit decodings at each step.",
+    "optimal_complexity": "O(n)",
+    "company_tags": ["amazon", "facebook", "microsoft"],
+    "role_tags": ["sde-2"],
+    "times_asked": 62,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/decode-ways/"
+  },
+  {
+    "title": "Unique Paths",
+    "description": "A robot is on an `m x n` grid at the top-left corner. It can move right or down. Count the number of possible unique paths to reach the bottom-right corner.\n\n**Example:**\n```\nInput: m = 3, n = 7\nOutput: 28\n```",
+    "difficulty": "medium",
+    "category": "dp",
+    "tags": ["dynamic-programming", "math", "combinatorics"],
+    "test_cases": [
+      {"input": "3 7", "expected_output": "28"},
+      {"input": "3 2", "expected_output": "3"}
+    ],
+    "constraints": "1 <= m, n <= 100",
+    "hints": [
+      "dp[i][j] = dp[i-1][j] + dp[i][j-1].",
+      "Base case: first row and first column are all 1.",
+      "Can optimize to 1D DP or use combinatorics: C(m+n-2, m-1)."
+    ],
+    "solution_approach": "1D DP: dp = [1]*n. For each row (1..m-1): for j (1..n-1): dp[j] += dp[j-1].",
+    "optimal_complexity": "O(m*n)",
+    "company_tags": ["amazon", "google", "microsoft", "bloomberg"],
+    "role_tags": ["sde-1", "sde-2"],
+    "times_asked": 58,
+    "last_asked_year": 2023,
+    "source": "LeetCode",
+    "source_url": "https://leetcode.com/problems/unique-paths/"
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "company": "Amazon",
+  "slug": "amazon",
+  "common_topics": ["arrays", "trees", "graphs", "dynamic-programming", "system-design", "behavioral"],
+  "interview_rounds": [
+    "Online Assessment (2 coding problems, 90 min)",
+    "Phone Screen (1 coding problem + behavioral)",
+    "Loop Interviews x4 (coding + behavioral per round)",
+    "Bar Raiser Round (behavioral heavy, LP focused)"
+  ],
+  "typical_difficulty": "medium",
+  "focus_areas": [
+    "Leadership Principles (14 LPs — know all of them)",
+    "STAR method for every behavioral question",
+    "System Design: distributed systems, scalability",
+    "Trees and Graphs (very frequent)",
+    "Dynamic Programming (medium difficulty)"
+  ],
+  "top_problems": [
+    "Two Sum", "LRU Cache", "Number of Islands", "Merge Intervals",
+    "Best Time to Buy and Sell Stock", "Course Schedule", "Trapping Rain Water"
+  ],
+  "leadership_principles": [
+    "Customer Obsession", "Ownership", "Invent and Simplify", "Are Right, A Lot",
+    "Learn and Be Curious", "Hire and Develop the Best", "Insist on the Highest Standards",
+    "Think Big", "Bias for Action", "Frugality", "Earn Trust", "Dive Deep",
+    "Have Backbone; Disagree and Commit", "Deliver Results"
+  ],
+  "tips": [
+    "Every answer must map to a Leadership Principle.",
+    "Be specific: dates, metrics, impact. Vague answers fail.",
+    "For system design: start with requirements, then scale.",
+    "Amazon loves trees and graphs — practice traversals cold."
+  ]
+}
