@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/api', timeout: 40000 })
+const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api', timeout: 40000 })
 
 api.interceptors.request.use((config) => {
   const t = localStorage.getItem('access_token')
@@ -33,7 +33,7 @@ api.interceptors.response.use(r => r, async (error) => {
 export const clearAuth = () => { localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token') }
 export const isAuthed = () => !!localStorage.getItem('access_token')
 
-const USE_MOCK = true
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true' || (import.meta.env.DEV && !import.meta.env.VITE_API_URL);
 const delay = ms => new Promise(r => setTimeout(r, ms))
 
 export const authAPI = USE_MOCK ? {

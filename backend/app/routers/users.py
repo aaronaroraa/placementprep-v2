@@ -106,7 +106,7 @@ async def complete_onboarding(
         task = DailyTask(
             id=uuid.uuid4(), plan_id=plan.id, day_number=t["day_number"],
             task_type=t["task_type"], title=t["title"], description=t.get("description",""),
-            metadata=t.get("metadata",{}), priority=t.get("priority",2),
+            task_metadata=t.get("metadata",{}), priority=t.get("priority",2),
             estimated_minutes=t.get("estimated_minutes",30), completed=False,
         )
         db.add(task)

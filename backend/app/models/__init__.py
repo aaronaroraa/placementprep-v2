@@ -165,7 +165,7 @@ class DailyTask(Base):
     task_type: Mapped[TaskType] = mapped_column(SAEnum(TaskType))
     title: Mapped[str] = mapped_column(String(300))
     description: Mapped[Optional[str]] = mapped_column(Text)
-    metadata: Mapped[Optional[dict]] = mapped_column(JSONB)
+    task_metadata: Mapped[Optional[dict]] = mapped_column("metadata", JSONB, default=dict)
     problem_id: Mapped[Optional[uuid.UUID]] = mapped_column(UUID(as_uuid=True), ForeignKey("problems.id"), nullable=True)
     priority: Mapped[int] = mapped_column(Integer, default=2)
     estimated_minutes: Mapped[int] = mapped_column(Integer, default=30)

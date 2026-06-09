@@ -3,7 +3,7 @@ from typing import Literal
 
 
 class Settings(BaseSettings):
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
+    model_config = {"env_file": [".env", "../.env"], "env_file_encoding": "utf-8", "extra": "ignore"}
 
     DATABASE_URL: str = "postgresql+asyncpg://ppai:ppaipass@localhost:5432/placementprep"
     REDIS_URL: str = "redis://localhost:6379/0"
