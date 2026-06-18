@@ -39,7 +39,7 @@ export default function Landing() {
       <section style={{ position: 'relative', zIndex: 1, padding: '110px 48px 80px', maxWidth: 1000, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           {/* Pill */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '5px 14px', borderRadius: 20, background: 'var(--indigo-dim)', border: '1px solid rgba(99,102,241,0.3)', marginBottom: 32 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '5px 14px', borderRadius: 20, background: 'var(--indigo-dim)', border: '1px solid rgba(13,148,136,0.3)', marginBottom: 32 }}>
             <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--green)' }} />
             <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--indigo)', letterSpacing: 0.3 }}>AI Coach · Real Interviewer · Google Calendar</span>
           </div>

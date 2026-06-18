@@ -12,8 +12,21 @@ from app.routers.main_routers import (resume_router, coding_router, chat_router,
                                        mock_router, analytics_router)
 
 
+def _validate_production_config():
+    """Fail fast on insecure production config rather than silently shipping it."""
+    if settings.APP_ENV == "production":
+        problems = []
+        if settings.SECRET_KEY == "dev_secret_change_in_prod":
+            problems.append("SECRET_KEY is still the default — set a strong random value")
+        if settings.ALLOW_LOCAL_EXECUTION:
+            problems.append("ALLOW_LOCAL_EXECUTION must be False in production (RCE risk) — use Judge0")
+        if problems:
+            raise RuntimeError("Insecure production config:\n - " + "\n - ".join(problems))
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    _validate_production_config()
     os.makedirs(settings.RESUME_UPLOAD_DIR, exist_ok=True)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

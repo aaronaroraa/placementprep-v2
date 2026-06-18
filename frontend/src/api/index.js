@@ -131,6 +131,7 @@ export const userAPI = USE_MOCK ? {
     }
     return { data: { success: true, new_day: state.currentDay } }
   },
+  regeneratePlan: async () => { await delay(1200); return { data: { message: 'Plan regenerated', generated_by: 'ai', total_tasks: 18 } } },
   curriculum: async () => {
     await delay(400);
     const state = getProgressState();
@@ -145,6 +146,7 @@ export const userAPI = USE_MOCK ? {
   curriculum: () => api.get('/users/curriculum'),
   completeTask: taskId => api.post('/users/tasks/complete', { task_id: taskId }),
   advanceDay: () => api.post('/users/tasks/advance-day'),
+  regeneratePlan: () => api.post('/users/plan/regenerate'),
   connectCalendar: tokenData => api.post('/users/calendar/connect', { token_data: tokenData }),
 }
 
@@ -170,6 +172,47 @@ export const codingAPI = USE_MOCK ? {
   submissions: (limit=20) => api.get('/coding/submissions', { params: { limit } }),
 }
 
+// Streaming chat over SSE. Calls onDelta(text) per chunk, onDone(meta) at the end.
+export async function streamChat(payload, { onDelta, onDone, onError } = {}) {
+  if (USE_MOCK) {
+    // Simulate token streaming for demo mode.
+    const canned = "That's a reasonable start. Think about the time complexity — can you avoid the nested loop? Walk me through your reasoning."
+    const words = canned.split(' ')
+    for (const w of words) { await delay(45); onDelta?.(w + ' ') }
+    onDone?.({ done: true })
+    return
+  }
+  try {
+    const token = localStorage.getItem('access_token')
+    const base = import.meta.env.VITE_API_URL || '/api'
+    const res = await fetch(`${base}/chat/stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: JSON.stringify(payload),
+    })
+    if (!res.ok || !res.body) throw new Error(`stream failed: ${res.status}`)
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buf = ''
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buf += decoder.decode(value, { stream: true })
+      const parts = buf.split('\n\n')
+      buf = parts.pop()
+      for (const part of parts) {
+        const line = part.trim()
+        if (!line.startsWith('data:')) continue
+        try {
+          const data = JSON.parse(line.slice(5).trim())
+          if (data.delta) onDelta?.(data.delta)
+          if (data.done) onDone?.(data)
+        } catch { /* ignore malformed chunk */ }
+      }
+    }
+  } catch (e) { onError?.(e) }
+}
+
 export const chatAPI = USE_MOCK ? {
   send: async d => { await delay(800); return { data: { reply: "That's a good approach. How would you optimize the space complexity?" } } },
   end: async sessionId => { await delay(300); return { data: { feedback: "Strong problem solving skills, but need to communicate tradeoffs earlier." } } },
@@ -178,30 +221,49 @@ export const chatAPI = USE_MOCK ? {
   end: sessionId => api.post('/chat/end-session', { session_id: sessionId }),
 }
 
+// Mock interview conversation simulator — tracks message count to trigger debrief
+let _mockExchanges = 0
+const MOCK_FOLLOWUPS = [
+  m => `You mentioned "${m.split(' ').slice(0,3).join(' ')}…" — can you quantify the impact? Give me a number.`,
+  () => "Interesting. What alternatives did you consider and why did you reject them?",
+  () => "What broke first when you tried to scale that? Walk me through the failure.",
+  () => "You said you improved performance — by how much exactly? What was the before and after?",
+  () => "How did your teammates react to that decision? Was there pushback?",
+  () => "If you were rebuilding that today at 100x the scale, what would you change first?",
+]
+
 export const mockAPI = USE_MOCK ? {
-  start: async d => { 
-    await delay(600); 
-    const isGoogle = Math.random() > 0.5;
-    const company = isGoogle ? "Google" : "Meta";
-    const qOptions = [
-      `Since you're targeting ${company}, let's start with a question asked 14 times last month in their loops: Tell me about a time you had a fundamental disagreement with a Product Manager. How did you resolve the conflict?`,
-      `Welcome. For a Frontend Engineering role at ${company}, you need to understand core architecture. This was asked last week: Walk me through exactly how you would architect a client-side routing library from scratch without React Router.`,
-      `Let's begin your ${company} mock interview. A very common recent question is: Tell me about a heavily-invested project that ultimately failed. What did you learn and how did you pivot?`
-    ];
-    return { data: { mock_id: '123', total_questions: 3, first_question: qOptions[Math.floor(Math.random() * qOptions.length)] } } 
+  start: async d => {
+    await delay(600)
+    _mockExchanges = 0
+    const openings = [
+      "Let's begin. Walk me through your background in 90 seconds. Focus on what's most relevant to this role.",
+      "Good. Before we dive in — tell me about the project you're most proud of and what your specific contribution was.",
+      "Let's get started. Walk me through the most technically challenging thing you've built. I want specifics.",
+    ]
+    return { data: { mock_id: 'mock-123', opening: openings[Math.floor(Math.random() * openings.length)], round_type: d.round_type } }
   },
-  answer: async d => { 
-    await delay(1000); 
-    if (d.question_index === 2) { 
-      return { data: { is_complete: true, interviewer_response: "That's a solid, comprehensive answer. I have all I need.", overall_score: 88, feedback_summary: "Great structural approach and communication depth. You framed the tradeoffs exactly how they expect in tier-1 interviews." } } 
-    } else { 
-      return { data: { is_complete: false, interviewer_response: "That makes sense. Let's pivot slightly.", next_question_index: d.question_index + 1, next_question: "Following up on that, an overarching theme in tech interviews right now is resilience. How would you scale that exact approach if network latency unexpectedly spiked by 500ms between your regional microservices?" } } 
-    } 
+  chat: async d => {
+    await delay(900)
+    _mockExchanges++
+    if (d.end_requested || _mockExchanges >= 6) {
+      return { data: {
+        reply: "I have enough to give you a proper evaluation.\n\n**STRONGEST MOMENT:** Your explanation of the caching layer showed real depth — you knew the tradeoffs cold.\n\n**BIGGEST RED FLAG:** You gave impact in vague terms ('improved performance') without a single number. Every claim needs a metric.\n\n**WOULD HIRE:** Borderline\n\n**TOP 3 TO IMPROVE:**\n1. Quantify everything — latency, scale, users, error rates\n2. Practice the 'why not X?' format for every technical decision\n3. Slow down on system design — state assumptions before proposing solutions\n\n**SCORE: 71**",
+        is_complete: true, overall_score: 71, verdict: 'borderline',
+        feedback_summary: "Borderline pass. Strong on depth, needs quantification.",
+        exchange_count: _mockExchanges,
+      } }
+    }
+    const followup = MOCK_FOLLOWUPS[Math.min(_mockExchanges - 1, MOCK_FOLLOWUPS.length - 1)](d.message)
+    return { data: { reply: followup, is_complete: false, exchange_count: _mockExchanges } }
   },
-  history: async () => { await delay(400); return { data: { sessions: [] } } },
+  history: async () => { await delay(400); return { data: [
+    { id: 'm1', interview_type: 'full', target_company: 'Google', overall_score: 82, verdict: 'pass', completed: true, duration_minutes: 28, tab_switches: 0, started_at: new Date(Date.now()-2*864e5).toISOString() },
+    { id: 'm2', interview_type: 'behavioral', target_company: 'Google', overall_score: 61, verdict: 'borderline', completed: true, duration_minutes: 24, tab_switches: 1, started_at: new Date(Date.now()-6*864e5).toISOString() },
+  ] } },
 } : {
   start: d => api.post('/mock/start', d),
-  answer: d => api.post('/mock/answer', d),
+  chat: d => api.post('/mock/chat', d),
   history: () => api.get('/mock/history'),
 }
 

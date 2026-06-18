@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FiZap, FiGrid, FiCode, FiBarChart2, FiMic, FiLogOut, FiCalendar, FiMap } from 'react-icons/fi'
+import { FiZap, FiGrid, FiCode, FiBarChart2, FiVideo, FiLogOut, FiCalendar, FiMap } from 'react-icons/fi'
 import { clearAuth } from '../api'
 import { useStore } from '../stores'
 import { Navigate } from 'react-router-dom'
@@ -15,18 +15,16 @@ export function ProtectedRoute({ children }) {
 // ── Spinner ───────────────────────────────────────────────────────────────────
 export function Spinner({ size = 20, color = 'var(--indigo)' }) {
   return (
-    <div style={{ width: size, height: size, border: `2px solid rgba(255,255,255,0.1)`, borderTopColor: color, borderRadius: '50%' }} className="spin" />
+    <div style={{ width: size, height: size, border: `2px solid rgba(17,24,39,0.12)`, borderTopColor: color, borderRadius: '50%' }} className="spin" />
   )
 }
 
 // ── Background Orbs ───────────────────────────────────────────────────────────
 export function Orbs() {
+  // Light theme: keep the canvas clean. A single, very subtle teal wash at the
+  // top — no glowing blobs (those read as a dark-mode / AI-template look).
   return (
-    <>
-      <div className="orb" style={{ width: 500, height: 500, top: '-15%', left: '-10%', background: 'radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)' }} />
-      <div className="orb" style={{ width: 400, height: 400, top: '40%', right: '-10%', background: 'radial-gradient(circle, rgba(34,211,165,0.06) 0%, transparent 70%)' }} />
-      <div className="orb" style={{ width: 350, height: 350, bottom: '5%', left: '25%', background: 'radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%)' }} />
-    </>
+    <div className="orb" style={{ width: 700, height: 500, top: '-30%', left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, rgba(13,148,136,0.05) 0%, transparent 70%)' }} />
   )
 }
 
@@ -42,14 +40,14 @@ export function Navbar() {
     { to: '/dashboard', label: 'Mission', icon: FiGrid },
     { to: '/plan', label: 'Plan', icon: FiMap },
     { to: '/coding', label: 'Code', icon: FiCode },
-    { to: '/mock', label: 'Interview', icon: FiMic },
+    { to: '/interviews', label: 'Interviews', icon: FiVideo },
     { to: '/analytics', label: 'Analytics', icon: FiBarChart2 },
   ]
 
   return (
     <nav style={{
       position: 'sticky', top: 0, zIndex: 100,
-      background: 'rgba(6,6,13,0.85)', backdropFilter: 'blur(20px)',
+      background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)',
       borderBottom: '1px solid var(--border)',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '0 28px', height: 52,
@@ -72,7 +70,7 @@ export function Navbar() {
                   background: active ? 'var(--indigo-dim)' : 'transparent',
                   color: active ? 'var(--indigo)' : 'var(--text-3)',
                   fontSize: 12, fontWeight: 500,
-                  border: active ? '1px solid rgba(99,102,241,0.25)' : '1px solid transparent',
+                  border: active ? '1px solid rgba(20,184,166,0.25)' : '1px solid transparent',
                   transition: 'all 0.15s',
                 }}>
                 <Icon size={12} />

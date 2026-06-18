@@ -39,7 +39,7 @@ function ReadinessMeter({ score }) {
   return (
     <div style={{ padding: '16px 20px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, textAlign: 'center' }}>
       <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'var(--text-3)', marginBottom: 10 }}>READINESS</div>
-      <div style={{ position: 'relative', height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginBottom: 10, overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 4, background: 'rgba(17,24,39,0.08)', borderRadius: 2, marginBottom: 10, overflow: 'hidden' }}>
         <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 1, ease: 'easeOut' }}
           style={{ position: 'absolute', inset: '0 auto 0 0', background: color, borderRadius: 2 }} />
       </div>

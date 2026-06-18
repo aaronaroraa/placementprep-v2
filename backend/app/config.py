@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     # Judge0
     JUDGE0_API_KEY: str = ""
     JUDGE0_HOST: str = "judge0-ce.p.rapidapi.com"
+    # Dev-only: run Python submissions in a local subprocess when Judge0 is absent.
+    # Executes untrusted code on the host — NEVER enable in production. Use Judge0 there.
+    ALLOW_LOCAL_EXECUTION: bool = False
 
     # Files
     RESUME_UPLOAD_DIR: str = "./uploads/resumes"

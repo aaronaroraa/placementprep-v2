@@ -131,13 +131,13 @@ export default function Coding() {
                     <input value={filter} onChange={e => setFilter(e.target.value)} placeholder="Search…" className="input" style={{ padding: '5px 10px', fontSize: 11 }} />
                     {['easy','medium','hard'].map(d => (
                       <button key={d} onClick={() => setFilter(f => f === d ? '' : d)}
-                        style={{ fontSize: 10, fontWeight: 700, padding: '4px 9px', borderRadius: 6, border: 'none', cursor: 'pointer', background: filter === d ? `${DIFF_COLOR[d]}22` : 'rgba(255,255,255,0.06)', color: DIFF_COLOR[d] }}>
+                        style={{ fontSize: 10, fontWeight: 700, padding: '4px 9px', borderRadius: 6, border: 'none', cursor: 'pointer', background: filter === d ? `${DIFF_COLOR[d]}22` : 'var(--raised)', color: DIFF_COLOR[d] }}>
                         {d}
                       </button>
                     ))}
                   </div>
                   {filtered.map(p => (
-                    <button key={p.id} onClick={() => selectProblem(p)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: problem?.id === p.id ? 'var(--indigo-dim)' : 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                    <button key={p.id} onClick={() => selectProblem(p)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: problem?.id === p.id ? 'var(--indigo-dim)' : 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
                       <span style={{ width: 7, height: 7, borderRadius: '50%', background: DIFF_COLOR[p.difficulty], flexShrink: 0 }} />
                       <span style={{ fontSize: 12, color: 'var(--text-1)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</span>
                       <span style={{ fontSize: 9, color: 'var(--text-3)' }}>{p.times_asked}×</span>
@@ -241,13 +241,13 @@ export default function Coding() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderBottom: '1px solid var(--border)', flexShrink: 0, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', gap: 4 }}>
               {LANGS.map(l => (
-                <button key={l} onClick={() => changeLang(l)} style={{ fontSize: 10, fontWeight: 700, padding: '4px 11px', borderRadius: 6, border: 'none', cursor: 'pointer', background: lang === l ? 'var(--indigo-dim)' : 'rgba(255,255,255,0.06)', color: lang === l ? 'var(--indigo)' : 'var(--text-3)', textTransform: 'capitalize' }}>
+                <button key={l} onClick={() => changeLang(l)} style={{ fontSize: 10, fontWeight: 700, padding: '4px 11px', borderRadius: 6, border: 'none', cursor: 'pointer', background: lang === l ? 'var(--indigo-dim)' : 'var(--raised)', color: lang === l ? 'var(--indigo)' : 'var(--text-3)', textTransform: 'capitalize' }}>
                   {l}
                 </button>
               ))}
             </div>
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-              <button onClick={() => problem && setCode(problem.starter_code?.[lang] || '')} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 500, padding: '5px 11px', borderRadius: 7, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text-3)', cursor: 'pointer' }}>
+              <button onClick={() => problem && setCode(problem.starter_code?.[lang] || '')} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 500, padding: '5px 11px', borderRadius: 7, background: 'var(--raised)', border: '1px solid var(--border)', color: 'var(--text-3)', cursor: 'pointer' }}>
                 <FiRefreshCw size={11} /> Reset
               </button>
               <motion.button whileTap={{ scale: 0.96 }} onClick={submit} disabled={submitting}
@@ -263,7 +263,7 @@ export default function Coding() {
               language={lang === 'cpp' ? 'cpp' : lang}
               value={code}
               onChange={v => setCode(v || '')}
-              theme="vs-dark"
+              theme="light"
               options={{
                 fontSize: 13, fontFamily: '"JetBrains Mono", monospace', fontLigatures: true,
                 lineNumbers: 'on', wordWrap: 'on', minimap: { enabled: false },

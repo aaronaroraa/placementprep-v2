@@ -383,14 +383,31 @@ export function Theory() {
     setMessages(m => [...m, { role: 'user', text }])
     setLoading(true)
     try {
-      const { chatAPI } = await import('../api')
-      const r = await chatAPI.send({ message: text, context_type: 'flashcard', topic })
-      setMessages(m => [...m, { role: 'assistant', text: r.data.reply }])
-      speak(r.data.reply)
+      const { streamChat } = await import('../api')
+      // Add an empty assistant bubble we'll fill as tokens arrive.
+      setMessages(m => [...m, { role: 'assistant', text: '' }])
+      let full = ''
+      let firstChunk = true
+      await streamChat(
+        { message: text, context_type: 'flashcard', topic },
+        {
+          onDelta: (piece) => {
+            full += piece
+            if (firstChunk) { setLoading(false); firstChunk = false }
+            setMessages(m => { const copy = [...m]; copy[copy.length - 1] = { role: 'assistant', text: full }; return copy })
+          },
+          onDone: () => { speak(full) },
+          onError: () => {
+            const fb = 'Good attempt. Think about the key distinguishing factor. Next question coming.'
+            setMessages(m => { const copy = [...m]; copy[copy.length - 1] = { role: 'assistant', text: fb }; return copy })
+            speak(fb)
+          },
+        }
+      )
     } catch {
-      const m = 'Good attempt. Think about this more carefully — what\'s the key distinguishing factor? Next question coming.'
-      setMessages(m => [...m, { role: 'assistant', text: m }])
-      speak(m)
+      const fb = 'Good attempt. Think about this more carefully — what\'s the key distinguishing factor?'
+      setMessages(m => [...m, { role: 'assistant', text: fb }])
+      speak(fb)
     } finally { setLoading(false) }
   }
 

@@ -1,4 +1,4 @@
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
@@ -6,26 +6,34 @@
 @tailwind utilities;
 
 :root {
-  --void: #06060d;
-  --base: #0b0b14;
-  --surface: #10101c;
-  --raised: #161624;
-  --border: rgba(255,255,255,0.07);
-  --border-bright: rgba(255,255,255,0.14);
-  --indigo: #6366f1;
-  --indigo-dim: rgba(99,102,241,0.15);
-  --indigo-glow: rgba(99,102,241,0.25);
-  --green: #22d3a5;
-  --green-dim: rgba(34,211,165,0.12);
-  --amber: #f59e0b;
-  --amber-dim: rgba(245,158,11,0.12);
-  --red: #f43f5e;
-  --red-dim: rgba(244,63,94,0.12);
-  --text-1: rgba(255,255,255,0.95);
-  --text-2: rgba(255,255,255,0.6);
-  --text-3: rgba(255,255,255,0.35);
-  --font-display: 'Clash Display', sans-serif;
-  --font-body: 'Satoshi', sans-serif;
+  /* Light theme. Clean white canvas with soft gray surfaces. */
+  --void: #ffffff;
+  --base: #f6f7f9;
+  --surface: #ffffff;
+  --raised: #f3f4f6;
+  --border: rgba(17,24,39,0.10);
+  --border-bright: rgba(17,24,39,0.18);
+  --shadow-sm: 0 1px 2px rgba(17,24,39,0.05);
+  --shadow: 0 4px 16px rgba(17,24,39,0.06);
+  --shadow-lg: 0 12px 32px rgba(17,24,39,0.08);
+  /* Primary brand — teal (no purple). Variable kept as --indigo for backwards
+     compatibility across pages; the value is now teal everywhere. */
+  --indigo: #0d9488;
+  --indigo-dim: rgba(13,148,136,0.10);
+  --indigo-glow: rgba(13,148,136,0.18);
+  --brand: #0d9488;
+  --brand-soft: #14b8a6;
+  --green: #059669;
+  --green-dim: rgba(5,150,105,0.10);
+  --amber: #d97706;
+  --amber-dim: rgba(217,119,6,0.10);
+  --red: #e11d48;
+  --red-dim: rgba(225,29,72,0.10);
+  --text-1: rgba(17,24,39,0.95);
+  --text-2: rgba(17,24,39,0.62);
+  --text-3: rgba(17,24,39,0.42);
+  --font-display: 'Montserrat', sans-serif;
+  --font-body: 'Poppins', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -46,7 +54,7 @@ body {
 /* ── Scrollbar ────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(20,184,166,0.3); border-radius: 2px; }
 
 /* ── Typography ───────────────────────────────────── */
 .font-display { font-family: var(--font-display); }
@@ -57,6 +65,7 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
+  box-shadow: var(--shadow-sm);
 }
 
 /* Bordered left accent card */
@@ -106,9 +115,9 @@ body {
   background: var(--indigo);
   color: white;
   padding: 10px 22px;
-  box-shadow: 0 0 20px var(--indigo-glow);
+  box-shadow: var(--shadow-sm);
 }
-.btn-primary:hover:not(:disabled) { opacity: 0.88; box-shadow: 0 0 30px var(--indigo-glow); }
+.btn-primary:hover:not(:disabled) { opacity: 0.92; box-shadow: var(--shadow); }
 
 .btn-ghost {
   background: var(--raised);
@@ -188,7 +197,7 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.4;
+  opacity: 0.15;
 }
 
 /* ── Glow orbs ────────────────────────────────────── */
@@ -208,11 +217,11 @@ body::before {
 }
 
 /* ── Markdown in chat ─────────────────────────────── */
-.md pre { background: var(--void); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; font-family: var(--font-mono); font-size: 12px; margin: 8px 0; }
-.md code { font-family: var(--font-mono); font-size: 12px; background: rgba(0,0,0,0.3); padding: 2px 5px; border-radius: 4px; }
+.md pre { background: var(--base); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; font-family: var(--font-mono); font-size: 12px; margin: 8px 0; }
+.md code { font-family: var(--font-mono); font-size: 12px; background: rgba(17,24,39,0.06); padding: 2px 5px; border-radius: 4px; }
 .md p { margin-bottom: 7px; }
 .md ul { padding-left: 16px; margin-bottom: 7px; }
-.md strong { color: var(--green); font-weight: 600; }
+.md strong { color: var(--brand); font-weight: 600; }
 
 /* ── Task row ─────────────────────────────────────── */
 .task-row {

@@ -21,14 +21,14 @@ function ReadinessGauge({ score }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '32px 20px' }}>
       <svg width={160} height={160} viewBox="0 0 160 160">
-        <circle cx={80} cy={80} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={10} />
+        <circle cx={80} cy={80} r={r} fill="none" stroke="rgba(17,24,39,0.10)" strokeWidth={10} />
         <motion.circle cx={80} cy={80} r={r} fill="none" stroke={color} strokeWidth={10}
           strokeLinecap="round" strokeDasharray={C}
           initial={{ strokeDashoffset: C }} animate={{ strokeDashoffset: offset }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
           transform="rotate(-90 80 80)" />
-        <text x={80} y={74} textAnchor="middle" fill="white" fontSize={30} fontWeight={700} fontFamily="'Clash Display', sans-serif">{Math.round(pct)}</text>
-        <text x={80} y={92} textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize={11} fontFamily="'Satoshi', sans-serif">/ 100</text>
+        <text x={80} y={74} textAnchor="middle" fill="#111827" fontSize={30} fontWeight={700} fontFamily="'Montserrat', sans-serif">{Math.round(pct)}</text>
+        <text x={80} y={92} textAnchor="middle" fill="rgba(17,24,39,0.42)" fontSize={11} fontFamily="'Poppins', sans-serif">/ 100</text>
       </svg>
       <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 600, color: 'var(--text-2)', marginTop: 4 }}>Readiness</div>
       <div style={{ fontSize: 11, color, marginTop: 3 }}>
@@ -129,8 +129,8 @@ export default function Analytics() {
             <Label>TOPIC RADAR</Label>
             <ResponsiveContainer width="100%" height={220}>
               <RadarChart data={radarData}>
-                <PolarGrid stroke="rgba(255,255,255,0.06)" />
-                <PolarAngleAxis dataKey="topic" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }} />
+                <PolarGrid stroke="rgba(17,24,39,0.10)" />
+                <PolarAngleAxis dataKey="topic" tick={{ fill: 'rgba(17,24,39,0.55)', fontSize: 10 }} />
                 <Radar name="Score" dataKey="score" stroke="var(--indigo)" fill="var(--indigo)" fillOpacity={0.15} strokeWidth={2} />
               </RadarChart>
             </ResponsiveContainer>
@@ -141,9 +141,9 @@ export default function Analytics() {
             {barData.some(d => d.Solved > 0) ? (
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={barData} barSize={10}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                  <XAxis dataKey="date" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(17,24,39,0.08)" />
+                  <XAxis dataKey="date" tick={{ fill: 'rgba(17,24,39,0.45)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: 'rgba(17,24,39,0.45)', fontSize: 10 }} axisLine={false} tickLine={false} />
                   <Tooltip content={<TT />} />
                   <Bar dataKey="Solved" fill="var(--indigo)" radius={[4,4,0,0]} />
                 </BarChart>
@@ -160,9 +160,9 @@ export default function Analytics() {
           {lineData.length > 1 ? (
             <ResponsiveContainer width="100%" height={180}>
               <LineChart data={lineData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                <XAxis dataKey="date" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0,100]} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(17,24,39,0.08)" />
+                <XAxis dataKey="date" tick={{ fill: 'rgba(17,24,39,0.45)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0,100]} tick={{ fill: 'rgba(17,24,39,0.45)', fontSize: 10 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<TT />} />
                 <Line type="monotone" dataKey="Readiness" stroke="var(--indigo)" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="Accuracy" stroke="var(--green)" strokeWidth={2} dot={false} strokeDasharray="5 3" />

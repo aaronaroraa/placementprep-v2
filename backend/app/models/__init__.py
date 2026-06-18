@@ -28,6 +28,7 @@ class TaskType(str, enum.Enum):
 
 class ContextType(str, enum.Enum):
     coding = "coding"; resume = "resume"; general = "general"; mock_interview = "mock_interview"
+    flashcard = "flashcard"; coach = "coach"
 
 class ImprovementTrend(str, enum.Enum):
     improving = "improving"; stable = "stable"; declining = "declining"
@@ -62,6 +63,11 @@ class User(Base):
     skill_assessment: Mapped[Optional[dict]] = mapped_column(JSONB, default=dict)
     onboarding_completed: Mapped[bool] = mapped_column(Boolean, default=False)
     onboarding_step: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Subscription
+    subscription_status: Mapped[str] = mapped_column(String(20), default="free_trial")
+    trial_ends_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    subscription_started_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -223,4 +229,13 @@ class MockInterview(Base):
     completed: Mapped[bool] = mapped_column(Boolean, default=False)
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+
+    # Proctored session fields
+    is_proctored: Mapped[bool] = mapped_column(Boolean, default=False)
+    time_limit_minutes: Mapped[int] = mapped_column(Integer, default=30)
+    tab_switches: Mapped[int] = mapped_column(Integer, default=0)
+    camera_active: Mapped[bool] = mapped_column(Boolean, default=False)
+    question_breakdown: Mapped[Optional[list]] = mapped_column(JSONB, default=list)
+    verdict: Mapped[Optional[str]] = mapped_column(String(20))  # pass | borderline | fail
+
     user: Mapped["User"] = relationship(back_populates="mock_interviews")

@@ -141,6 +141,48 @@ def generate_plan(days_left, target_company=None, target_role=None, interview_da
         "plan_type": plan_type, "start_date": today, "end_date": end,
         "total_days": days_left, "target_company": target_company, "target_role": target_role,
         "plan_structure": {"plan_type": plan_type, "total_tasks": len(tasks),
-                           "company_overlay": COMPANY_FOCUS.get((target_company or "").lower(), [])},
+                           "company_overlay": COMPANY_FOCUS.get((target_company or "").lower(), []),
+                           "generated_by": "static"},
         "tasks": tasks,
+    }
+
+
+async def generate_plan_smart(days_left, target_company=None, target_role=None,
+                              interview_date=None, daily_hours=2.0,
+                              candidate_problems=None,
+                              # kept for backwards compat but not passed to AI
+                              skill_assessment=None, skill_gaps=None):
+    """
+    AI-first plan generation: comprehensive from-scratch curriculum covering every
+    topic the candidate needs. Falls back to the static generator if AI fails.
+    """
+    from app.services.ai_service import generate_ai_study_plan
+
+    ai_tasks = None
+    try:
+        ai_tasks = await generate_ai_study_plan(
+            company=target_company or "a top tech company",
+            role=target_role or "SDE-1",
+            days_left=max(1, days_left),
+            daily_hours=daily_hours,
+            candidate_problems=candidate_problems or [],
+        )
+    except Exception:
+        ai_tasks = None
+
+    if not ai_tasks:
+        # Resilient fallback — the static engine always returns a valid plan.
+        return generate_plan(days_left, target_company, target_role, interview_date, daily_hours)
+
+    from datetime import date, timedelta
+    plan_type = determine_plan_type(days_left)
+    today = date.today()
+    end = interview_date or (today + timedelta(days=max(days_left, 1)))
+    return {
+        "plan_type": plan_type, "start_date": today, "end_date": end,
+        "total_days": days_left, "target_company": target_company, "target_role": target_role,
+        "plan_structure": {"plan_type": plan_type, "total_tasks": len(ai_tasks),
+                           "company_overlay": COMPANY_FOCUS.get((target_company or "").lower(), []),
+                           "generated_by": "ai"},
+        "tasks": ai_tasks,
     }

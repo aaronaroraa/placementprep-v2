@@ -15,8 +15,13 @@ from app.services.resume_parser import parse_resume
 from app.services.code_executor import execute_code, STARTER_CODE, estimate_complexity
 from app.services.ai_service import (interviewer_response, coach_response,
                                      flashcard_response, mock_interview_response,
-                                     generate_resume_interview_questions)
+                                     mock_interview_chat,
+                                     generate_resume_interview_questions,
+                                     extract_score_from_evaluation, extract_verdict_from_score,
+                                     build_chat_system, stream_ai)
+from app.services.cache import rate_limit, cache_get, cache_set
 from app.config import settings
+from fastapi.responses import StreamingResponse
 
 # ── Resume ────────────────────────────────────────────────────────────────────
 resume_router = APIRouter(prefix="/resume", tags=["resume"])
@@ -29,6 +34,13 @@ async def upload_resume(file: UploadFile = File(...), db: AsyncSession = Depends
     if len(content) > settings.MAX_RESUME_SIZE_MB * 1024 * 1024:
         raise HTTPException(413, f"Max {settings.MAX_RESUME_SIZE_MB}MB")
     os.makedirs(settings.RESUME_UPLOAD_DIR, exist_ok=True)
+
+    # Clean up this user's previous resume files from disk to avoid unbounded growth.
+    old_r = await db.execute(select(Resume).where(Resume.user_id == user.id))
+    for old in old_r.scalars().all():
+        if old.file_path and os.path.exists(old.file_path):
+            try: os.remove(old.file_path)
+            except OSError: pass
     fid = uuid.uuid4()
     path = os.path.join(settings.RESUME_UPLOAD_DIR, f"{fid}_{file.filename}")
     async with aiofiles.open(path, "wb") as f:
@@ -61,7 +73,8 @@ async def gen_questions(db: AsyncSession = Depends(get_db), user: User = Depends
     if not resume: raise HTTPException(404, "No resume found")
     questions = await generate_resume_interview_questions(
         resume.projects_extracted or [], resume.experience_extracted or [],
-        user.target_role or "SDE-1", user.target_company or "your target company"
+        user.target_role or "SDE-1", user.target_company or "your target company",
+        skills=resume.skills_extracted or [], education=resume.education_extracted or [],
     )
     resume.interview_questions = questions
     db.add(resume)
@@ -76,6 +89,12 @@ coding_router = APIRouter(prefix="/coding", tags=["coding"])
 async def list_problems(difficulty: Optional[str] = None, category: Optional[str] = None,
                         company: Optional[str] = None, db: AsyncSession = Depends(get_db),
                         user: User = Depends(get_current_user)):
+    # Problems are global and change rarely → cache the rendered list for 10 minutes.
+    cache_key = f"problems:{difficulty or ''}:{category or ''}:{company or ''}"
+    cached = await cache_get(cache_key)
+    if cached is not None:
+        return cached
+
     q = select(Problem)
     if difficulty: q = q.where(Problem.difficulty == difficulty)
     if category: q = q.where(Problem.category == category)
@@ -85,9 +104,12 @@ async def list_problems(difficulty: Optional[str] = None, category: Optional[str
     if company:
         cl = company.lower()
         problems = [p for p in problems if cl in [t.lower() for t in (p.company_tags or [])]]
-    return [{"id": str(p.id), "title": p.title, "difficulty": p.difficulty, "category": p.category,
-             "tags": p.tags, "company_tags": p.company_tags, "times_asked": p.times_asked,
-             "optimal_complexity": p.optimal_complexity} for p in problems]
+    payload = [{"id": str(p.id), "title": p.title,
+                "difficulty": p.difficulty.value if hasattr(p.difficulty, "value") else p.difficulty,
+                "category": p.category, "tags": p.tags, "company_tags": p.company_tags,
+                "times_asked": p.times_asked, "optimal_complexity": p.optimal_complexity} for p in problems]
+    await cache_set(cache_key, payload, ttl_seconds=600)
+    return payload
 
 @coding_router.get("/problems/{pid}")
 async def get_problem(pid: str, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
@@ -140,6 +162,37 @@ async def submissions(limit: int = Query(20, le=100), db: AsyncSession = Depends
 # ── Chat ──────────────────────────────────────────────────────────────────────
 chat_router = APIRouter(prefix="/chat", tags=["chat"])
 
+
+async def _build_progress_context(db: AsyncSession, user) -> str:
+    """
+    Summarises the user's real standing for AI personalisation: readiness, weak
+    areas, streak, total solved, and days until the interview. Returns "" if there's
+    nothing meaningful yet (the AI then just coaches generally).
+    """
+    lines = []
+    mr = await db.execute(
+        select(PerformanceMetric).where(PerformanceMetric.user_id == user.id)
+        .order_by(PerformanceMetric.metric_date.desc()).limit(1)
+    )
+    metric = mr.scalar_one_or_none()
+    if metric:
+        if metric.readiness_score:
+            lines.append(f"Readiness score: {round(metric.readiness_score)}/100")
+        if metric.total_problems_solved:
+            lines.append(f"Problems solved so far: {metric.total_problems_solved}")
+        if metric.weak_areas:
+            lines.append(f"Weakest areas: {', '.join(metric.weak_areas)}")
+        if metric.strong_areas:
+            lines.append(f"Strong areas: {', '.join(metric.strong_areas)}")
+        if metric.streak_days:
+            lines.append(f"Current streak: {metric.streak_days} day(s)")
+    if user.interview_date:
+        from datetime import date as _date
+        days_left = (user.interview_date - _date.today()).days
+        if days_left >= 0:
+            lines.append(f"Days until their interview: {days_left}")
+    return "\n".join(f"- {l}" for l in lines)
+
 class ChatMsg(BaseModel):
     message: str
     problem_id: Optional[str] = None
@@ -149,6 +202,9 @@ class ChatMsg(BaseModel):
 
 @chat_router.post("/message")
 async def chat_message(body: ChatMsg, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+    # Rate limit: 20 AI messages/minute per user — protects the LLM API key from abuse.
+    if not await rate_limit(f"chat:{user.id}", limit=20, window_seconds=60):
+        raise HTTPException(429, "You're sending messages too fast. Please wait a moment.")
     # Get/create session
     sr = await db.execute(select(ChatSession).where(ChatSession.user_id == user.id, ChatSession.ended_at.is_(None), ChatSession.context_type == body.context_type).order_by(ChatSession.started_at.desc()).limit(1))
     session = sr.scalar_one_or_none()
@@ -161,6 +217,9 @@ async def chat_message(body: ChatMsg, db: AsyncSession = Depends(get_db), user: 
     rr = await db.execute(select(Resume).where(Resume.user_id == user.id).order_by(Resume.uploaded_at.desc()).limit(1))
     resume = rr.scalar_one_or_none()
     projects = resume.projects_extracted or [] if resume else []
+
+    # Build live progress context so the AI coaches against the user's real standing.
+    progress = await _build_progress_context(db, user)
 
     history = session.messages or []
     problem_title = ""
@@ -177,15 +236,15 @@ async def chat_message(body: ChatMsg, db: AsyncSession = Depends(get_db), user: 
         reply = await interviewer_response(body.message, history, user.full_name,
                                            user.target_company or "your target company",
                                            user.target_role or "SDE-1", problem_title,
-                                           body.current_code or "", projects)
+                                           body.current_code or "", projects, progress=progress)
     elif ct == "flashcard":
-        reply = await flashcard_response(body.message, history, body.topic or "computer science", user.full_name)
+        reply = await flashcard_response(body.message, history, body.topic or "computer science", user.full_name, progress=progress)
     elif ct == "coach":
         reply = await coach_response(body.message, history, user.full_name,
-                                     user.target_role or "SDE-1", user.target_company or "top tech company")
+                                     user.target_role or "SDE-1", user.target_company or "top tech company", progress=progress)
     else:
         reply = await coach_response(body.message, history, user.full_name,
-                                     user.target_role or "SDE-1", user.target_company or "top tech company")
+                                     user.target_role or "SDE-1", user.target_company or "top tech company", progress=progress)
 
     now = datetime.now(timezone.utc).isoformat()
     session.messages = (list(history) + [{"role":"user","content":body.message,"timestamp":now},
@@ -194,9 +253,71 @@ async def chat_message(body: ChatMsg, db: AsyncSession = Depends(get_db), user: 
     await db.flush()
     return {"session_id": str(session.id), "reply": reply}
 
+@chat_router.post("/stream")
+async def chat_stream(body: ChatMsg, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+    """
+    Streams the AI reply token-by-token via Server-Sent Events (SSE).
+    Each event is `data: {"delta": "..."}`; a final `data: {"done": true, ...}` closes it.
+    The full reply is persisted to the chat session once streaming completes.
+    """
+    if not await rate_limit(f"chat:{user.id}", limit=20, window_seconds=60):
+        raise HTTPException(429, "You're sending messages too fast. Please wait a moment.")
+
+    # Session
+    sr = await db.execute(select(ChatSession).where(ChatSession.user_id == user.id, ChatSession.ended_at.is_(None), ChatSession.context_type == body.context_type).order_by(ChatSession.started_at.desc()).limit(1))
+    session = sr.scalar_one_or_none()
+    if not session:
+        session = ChatSession(id=uuid.uuid4(), user_id=user.id, context_type=body.context_type, messages=[], context_data={})
+        db.add(session)
+        await db.flush()
+
+    rr = await db.execute(select(Resume).where(Resume.user_id == user.id).order_by(Resume.uploaded_at.desc()).limit(1))
+    resume = rr.scalar_one_or_none()
+    projects = resume.projects_extracted or [] if resume else []
+    progress = await _build_progress_context(db, user)
+    history = list(session.messages or [])
+
+    problem_title = ""
+    if body.problem_id:
+        try:
+            pr = await db.execute(select(Problem).where(Problem.id == uuid.UUID(body.problem_id)))
+            prob = pr.scalar_one_or_none()
+            if prob: problem_title = prob.title
+        except Exception:
+            pass
+
+    system = build_chat_system(
+        body.context_type, user_name=user.full_name,
+        company=user.target_company or "your target company", role=user.target_role or "SDE-1",
+        problem_title=problem_title, code=body.current_code or "", projects=projects,
+        topic=body.topic or "", progress=progress,
+    )
+
+    async def event_gen():
+        import json
+        full = ""
+        async for piece in stream_ai(system, history, body.message):
+            full += piece
+            yield f"data: {json.dumps({'delta': piece})}\n\n"
+        # Persist the completed exchange.
+        now = datetime.now(timezone.utc).isoformat()
+        session.messages = (history + [{"role": "user", "content": body.message, "timestamp": now},
+                                       {"role": "assistant", "content": full, "timestamp": now}])[-50:]
+        db.add(session)
+        await db.flush()
+        yield f"data: {json.dumps({'done': True, 'session_id': str(session.id)})}\n\n"
+
+    return StreamingResponse(event_gen(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+class EndSessionReq(BaseModel):
+    session_id: Optional[str] = None
+
+
 @chat_router.post("/end-session")
-async def end_session(body: dict, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
-    sid = body.get("session_id")
+async def end_session(body: EndSessionReq, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+    sid = body.session_id
     if sid:
         r = await db.execute(select(ChatSession).where(ChatSession.id == uuid.UUID(sid), ChatSession.user_id == user.id))
     else:
@@ -212,91 +333,153 @@ async def end_session(body: dict, db: AsyncSession = Depends(get_db), user: User
 # ── Mock Interview ────────────────────────────────────────────────────────────
 mock_router = APIRouter(prefix="/mock", tags=["mock"])
 
-class MockAnswer(BaseModel):
+
+def _is_interview_allowed(user) -> bool:
+    return user.subscription_status in ("free_trial", "active")
+
+
+class StartMockReq(BaseModel):
+    round_type: str = "full"  # technical | behavioral | full
+
+
+class MockChatReq(BaseModel):
     mock_id: str
-    question_index: int
-    answer: str
+    message: str
+    end_requested: bool = False       # candidate clicked "End interview"
+    tab_switches: Optional[int] = None
+    camera_active: Optional[bool] = None
+
+
+def _resume_data_from(resume) -> dict:
+    if not resume:
+        return {}
+    return {
+        "projects": resume.projects_extracted or [],
+        "experience": resume.experience_extracted or [],
+        "skills": resume.skills_extracted or [],
+        "education": resume.education_extracted or [],
+    }
+
 
 @mock_router.post("/start")
-async def start_mock(body: dict, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
-    interview_type = body.get("interview_type", "technical")
+async def start_mock(body: StartMockReq, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+    if not _is_interview_allowed(user):
+        raise HTTPException(403, "Mock interviews require an active subscription")
+
     rr = await db.execute(select(Resume).where(Resume.user_id == user.id).order_by(Resume.uploaded_at.desc()).limit(1))
     resume = rr.scalar_one_or_none()
-    projects = resume.projects_extracted or [] if resume else []
-    questions = await generate_resume_interview_questions(
-        projects, resume.experience_extracted or [] if resume else [],
-        user.target_role or "SDE-1", user.target_company or "top tech company"
+    resume_data = _resume_data_from(resume)
+
+    # AI generates the opening question — no pre-generated list
+    opening = await mock_interview_chat(
+        message="[START]",
+        history=[],
+        user_name=user.full_name or "Candidate",
+        company=user.target_company or "top tech company",
+        role=user.target_role or "SDE-1",
+        resume_data=resume_data,
+        round_type=body.round_type,
     )
-    mock = MockInterview(id=uuid.uuid4(), user_id=user.id, interview_type=interview_type,
-                         target_company=user.target_company, target_role=user.target_role,
-                         questions=questions, answers=[], evaluations=[], completed=False)
+
+    mock = MockInterview(
+        id=uuid.uuid4(), user_id=user.id, interview_type=body.round_type,
+        target_company=user.target_company, target_role=user.target_role,
+        # Store conversation as a flat messages list: [{"role": "assistant"|"user", "content": "..."}]
+        questions=[opening], answers=[], evaluations=[],
+        completed=False, is_proctored=True, time_limit_minutes=30,
+    )
     db.add(mock)
     await db.flush()
-    return {"mock_id": str(mock.id), "first_question": questions[0] if questions else "Tell me about yourself.", "total_questions": len(questions), "interview_type": interview_type}
+    return {"mock_id": str(mock.id), "opening": opening, "round_type": body.round_type}
 
-@mock_router.post("/answer")
-async def submit_answer(body: MockAnswer, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+
+@mock_router.post("/chat")
+async def mock_chat(body: MockChatReq, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+    """
+    Conversational interview turn. Passes the full message history to the AI so it can
+    follow up on specific words/concepts from the candidate's last answer instead of
+    moving to a pre-set next question.
+    """
+    if not await rate_limit(f"mock:{user.id}", limit=30, window_seconds=60):
+        raise HTTPException(429, "Too many submissions. Please slow down.")
+
     r = await db.execute(select(MockInterview).where(MockInterview.id == uuid.UUID(body.mock_id), MockInterview.user_id == user.id))
     mock = r.scalar_one_or_none()
-    if not mock: raise HTTPException(404, "Mock not found")
+    if not mock:
+        raise HTTPException(404, "Mock not found")
+    if mock.completed:
+        raise HTTPException(400, "This interview is already complete")
 
     rr = await db.execute(select(Resume).where(Resume.user_id == user.id).order_by(Resume.uploaded_at.desc()).limit(1))
     resume = rr.scalar_one_or_none()
-    projects = resume.projects_extracted or [] if resume else []
+    resume_data = _resume_data_from(resume)
 
-    answers = list(mock.answers or [])
-    answers.append({"question_index": body.question_index, "answer": body.answer})
-    mock.answers = answers
+    # Proctoring telemetry
+    if body.tab_switches is not None:
+        mock.tab_switches = body.tab_switches
+    if body.camera_active is not None:
+        mock.camera_active = body.camera_active
 
-    questions = mock.questions or []
-    current_q = questions[body.question_index] if body.question_index < len(questions) else ""
+    # Rebuild full conversation history from stored turns
+    # questions[] = AI turns, answers[] = candidate turns, interleaved
+    ai_turns = list(mock.questions or [])   # AI messages (opening + follow-ups)
+    candidate_turns = list(mock.answers or [])  # candidate messages
 
     history = []
-    for i, ans in enumerate(answers[:-1]):
-        if i < len(questions):
-            history.append({"role": "assistant", "content": questions[i]})
-            history.append({"role": "user", "content": ans["answer"]})
+    for i, ai_msg in enumerate(ai_turns):
+        history.append({"role": "assistant", "content": ai_msg})
+        if i < len(candidate_turns):
+            history.append({"role": "user", "content": candidate_turns[i]})
 
-    ai_response = await mock_interview_response(
-        body.answer, history, user.full_name,
-        mock.target_company or "your target company",
-        mock.target_role or "SDE-1", projects,
-        mock.interview_type,
+    # Get the AI's next response (follow-up or new topic — AI decides)
+    ai_response = await mock_interview_chat(
+        message=body.message,
+        history=history,
+        user_name=user.full_name or "Candidate",
+        company=mock.target_company or "top tech company",
+        role=mock.target_role or "SDE-1",
+        resume_data=resume_data,
+        round_type=mock.interview_type or "full",
+        end_requested=body.end_requested,
     )
 
-    evaluations = list(mock.evaluations or [])
-    evaluations.append({"question_index": body.question_index, "evaluation": ai_response})
-    mock.evaluations = evaluations
+    # When end_requested, the user message is replaced by the debrief prompt in mock_interview_chat,
+    # so we don't persist a fake user turn for it — only persist real candidate answers.
+    if not body.end_requested:
+        mock.answers = candidate_turns + [body.message]
+    mock.questions = ai_turns + [ai_response]
 
-    # Check if done
-    next_q_index = body.question_index + 1
-    is_complete = next_q_index >= len(questions)
-    next_question = None
-    if not is_complete:
-        next_question = questions[next_q_index]
+    # The interview ends ONLY when explicitly requested (timer or manual end button).
+    # The AI never self-terminates during regular turns — it just keeps interviewing.
+    is_complete = body.end_requested
 
     if is_complete:
         mock.completed = True
         mock.completed_at = datetime.now(timezone.utc)
         mock.duration_minutes = int((datetime.now(timezone.utc) - mock.started_at).total_seconds() / 60)
-        # Final score from last AI response (contains debrief)
         mock.feedback_summary = ai_response
-        mock.overall_score = min(100, max(0, len([a for a in answers if len(a.get("answer","")) > 50]) * (100 / len(questions))))
+        mock.overall_score = extract_score_from_evaluation(ai_response)
+        mock.verdict = extract_verdict_from_score(mock.overall_score)
 
     db.add(mock)
     await db.flush()
-    return {"interviewer_response": ai_response, "next_question": next_question,
-            "next_question_index": next_q_index, "is_complete": is_complete,
-            "overall_score": mock.overall_score if is_complete else None,
-            "feedback_summary": mock.feedback_summary if is_complete else None}
+
+    return {
+        "reply": ai_response,
+        "is_complete": is_complete,
+        "overall_score": mock.overall_score if is_complete else None,
+        "verdict": mock.verdict if is_complete else None,
+        "feedback_summary": mock.feedback_summary if is_complete else None,
+        "exchange_count": len(mock.answers),
+    }
 
 @mock_router.get("/history")
 async def mock_history(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
     r = await db.execute(select(MockInterview).where(MockInterview.user_id == user.id).order_by(MockInterview.started_at.desc()).limit(10))
     mocks = r.scalars().all()
     return [{"id": str(m.id), "interview_type": m.interview_type, "target_company": m.target_company,
-             "overall_score": m.overall_score, "completed": m.completed, "duration_minutes": m.duration_minutes,
-             "started_at": m.started_at.isoformat()} for m in mocks]
+             "overall_score": m.overall_score, "verdict": m.verdict, "completed": m.completed,
+             "duration_minutes": m.duration_minutes, "started_at": m.started_at.isoformat()} for m in mocks]
 
 
 # ── Analytics ─────────────────────────────────────────────────────────────────

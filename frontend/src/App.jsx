@@ -8,7 +8,9 @@ import Auth, { AuthCallback } from './pages/Auth'
 import Onboarding from './pages/Onboarding'
 import Dashboard from './pages/Dashboard'
 import Coding from './pages/Coding'
-import { MockInterview, Theory } from './pages/MockInterview'
+import { Theory } from './pages/MockInterview'
+import Interviews from './pages/Interviews'
+import InterviewRoom from './pages/InterviewRoom'
 import Analytics from './pages/Analytics'
 import Plan from './pages/Plan'
 
@@ -24,7 +26,9 @@ function Routes_() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/plan" element={<ProtectedRoute><Plan /></ProtectedRoute>} />
         <Route path="/coding" element={<ProtectedRoute><Coding /></ProtectedRoute>} />
-        <Route path="/mock" element={<ProtectedRoute><MockInterview /></ProtectedRoute>} />
+        <Route path="/interviews" element={<ProtectedRoute><Interviews /></ProtectedRoute>} />
+        <Route path="/interview" element={<ProtectedRoute><InterviewRoom /></ProtectedRoute>} />
+        <Route path="/mock" element={<Navigate to="/interviews" replace />} />
         <Route path="/theory" element={<ProtectedRoute><Theory /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
