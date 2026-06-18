@@ -65,8 +65,10 @@ for url in [settings.FRONTEND_URL, os.environ.get("FRONTEND_URL_2", "")]:
     if url and url not in origins:
         origins.append(url)
 
+# Also allow Vercel preview deployments (e.g. placementprep-v2-<hash>-aaronaroraas-projects.vercel.app)
 app.add_middleware(CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://.*-aaronaroraas-projects\.vercel\.app",
     allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 app.include_router(auth_router, prefix="/api")
