@@ -1,14 +1,15 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.pool import NullPool
 from typing import AsyncGenerator
 from app.config import settings
 
-# statement_cache_size=0 is required when using Supabase's PgBouncer transaction
-# pooler — prepared statements are not supported in transaction mode.
+# NullPool lets Supabase's PgBouncer (transaction pooler) handle connection pooling.
+# SQLAlchemy creates a fresh asyncpg connection per request — no prepared statement conflicts.
 engine = create_async_engine(
     settings.DATABASE_URL,
-    connect_args={"statement_cache_size": 0, "ssl": "require"},
-    pool_size=5, max_overflow=5, pool_pre_ping=True,
+    connect_args={"ssl": True},
+    poolclass=NullPool,
     echo=settings.APP_ENV == "development",
 )
 AsyncSessionLocal = async_sessionmaker(
