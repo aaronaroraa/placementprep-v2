@@ -8,7 +8,7 @@ from app.config import settings
 # SQLAlchemy creates a fresh asyncpg connection per request — no prepared statement conflicts.
 engine = create_async_engine(
     settings.DATABASE_URL,
-    connect_args={"ssl": True},
+    connect_args={"ssl": False},
     poolclass=NullPool,
     echo=settings.APP_ENV == "development",
 )
