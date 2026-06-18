@@ -3,9 +3,12 @@ from sqlalchemy.orm import DeclarativeBase
 from typing import AsyncGenerator
 from app.config import settings
 
+# statement_cache_size=0 is required when using Supabase's PgBouncer transaction
+# pooler — prepared statements are not supported in transaction mode.
 engine = create_async_engine(
     settings.DATABASE_URL,
-    pool_size=20, max_overflow=10, pool_pre_ping=True,
+    connect_args={"statement_cache_size": 0, "ssl": "require"},
+    pool_size=5, max_overflow=5, pool_pre_ping=True,
     echo=settings.APP_ENV == "development",
 )
 AsyncSessionLocal = async_sessionmaker(
